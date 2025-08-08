@@ -1,0 +1,8 @@
+<!--<div id="map" style="height: 400px;"></div>-->
+
+<div data-controller="map"
+     data-map-latlong-value="<%=@markers.pluck(:latitude, :longitude)%>">
+
+  <div data-map-target="map" class="w-100 vh-100"></div>
+  <%#= form.hidden_field :coordinates, data: { map_target: "field" } %>
+</div>

@@ -1,0 +1,24 @@
+{
+  "name": "app",
+  "private": true,
+  "devDependencies": {
+    "esbuild": "^0.25.8",
+    "esbuild-copy-static-files": "^0.1.0",
+    "esbuild-plugin-copy": "^2.1.1"
+  },
+  "scripts": {
+    "build": "node esbuild.config.js",
+    "build:css": "sass app/assets/stylesheets/application.scss app/assets/builds/application.css --no-source-map --load-path=node_modules",
+    "build:css:watch": "sass --watch app/assets/stylesheets/application.scss app/assets/builds/application.css --no-source-map --load-path=node_modules"
+  },
+  "dependencies": {
+    "@hotwired/stimulus": "^3.2.2",
+    "@hotwired/turbo-rails": "^8.0.16",
+    "@popperjs/core": "^2.11.8",
+    "bootstrap": "^5.3.7",
+    "esbuild-sass-plugin": "^3.3.1",
+    "leaflet": "^1.9.4",
+    "leaflet.awesome-markers": "^2.0.5",
+    "sass": "^1.89.2"
+  }
+}
