@@ -7,9 +7,10 @@
     "esbuild-plugin-copy": "^2.1.1"
   },
   "scripts": {
-    "build": "node esbuild.config.js",
-    "build:css": "sass app/assets/stylesheets/application.scss app/assets/builds/application.css --no-source-map --load-path=node_modules",
-    "build:css:watch": "sass --watch app/assets/stylesheets/application.scss app/assets/builds/application.css --no-source-map --load-path=node_modules"
+    "build": "esbuild app/javascript/*.* --bundle --sourcemap --outdir=app/assets/builds --public-path=/assets",
+    "build:css": "sass ./app/assets/stylesheets/application.scss:./app/assets/builds/application.css ./app/assets/stylesheets/halloween.scss:./app/assets/builds/halloween.css ./app/assets/stylesheets/xmas.scss:./app/assets/builds/xmas.css --no-source-map --load-path=node_modules",
+    "build:css:watch": "nodemon --watch ./app/assets/stylesheets/ --ext scss --exec \"yarn build:css\"",
+    "watch:js": "nodemon --watch ./app/javascript/ --ext js --exec \"yarn build\""
   },
   "dependencies": {
     "@hotwired/stimulus": "^3.2.2",

@@ -1,0 +1,13 @@
+<div class="modal fade" id="modal" tabindex="-1" data-controller="modal" data-turbo-permanent data-modal-frame-id-value="modal-body">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content d-inline rounded-4">
+      <div class="modal-body p-4">
+        <div class="position-absolute end-0 px-4">
+          <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <%= turbo_frame_tag "modal-body" do %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

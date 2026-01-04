@@ -1,0 +1,24 @@
+<div class="container d-flex  flex-column  justify-content-center align-items-center mt-5" >
+  <div class="d-flex flex-column justify-content-center align-items-center">
+
+    <%= form_tag(modal_modal_test_index_path, method: :get, class: "d-inline-block", data: { turbo_frame: "modal-body", turbo_stream: true }) do %>
+      <%= button_tag "Modal A", name: "modal_type", type: :submit, value: "modal_a", class: "btn btn-primary px-4 py-2" %>
+
+      <%= button_tag "Modal B", name: "modal_type", type: :submit, value: "modal_b", class: "btn btn-warning px-4 py-2" %>
+    <% end %>
+
+    <%= form_tag(modal_different_layout_modal_test_index_url, method: :get, class: "d-inline-block mt-3", data: { turbo_frame: "modal-body", turbo_stream: true }) do %>
+      <%= button_tag "Modal Different Layout", type: :submit, class: "btn btn-danger px-4 py-2" %>
+    <% end %>
+
+  </div>
+
+
+  <div>
+    <h3> Action update: </h3>
+    <%= turbo_frame_tag "action-change-modal"  do%>
+    <% end %>
+  </div>
+</div>
+
+

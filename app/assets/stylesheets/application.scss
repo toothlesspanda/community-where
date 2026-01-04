@@ -1,2 +1,19 @@
-// Entry point for your Sass build
-@import "bootstrap/scss/bootstrap";
+//
+// Start Variables
+//
+@import "common_variables";
+
+$primary: #0C1439;
+$dark: #0C1439;
+$secondary: $gray-600;
+$success: #00B554;
+$info: #5D97D1;
+$warning:  #DB7000;
+$danger:  #D5113B;
+$light: $gray-100;
+
+//
+// End Variables
+//
+
+@import "global";

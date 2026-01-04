@@ -1,0 +1,50 @@
+//
+// Color system
+//
+
+// GRAY SCALE
+$white:  #fff !default;
+$gray-100: #d5efd5 !default;
+$gray-200: #e9ecef !default;
+$gray-300: #dee2e6 !default;
+$gray-400: #ced4da !default;
+$gray-500: #adb5bd !default;
+$gray-600: #85ba91 !default;
+$gray-700: #a8dac4 !default;
+$gray-800: #343a40 !default;
+$gray-900: #212529 !default;
+$black:  #000 !default;
+
+// DEFAULT COLORS
+$blue:    #0d6efd;
+$indigo:  #6610f2;
+$purple:  #6f42c1;
+$pink:    #d63384;
+$red:     #dc3545;
+$orange:  #fd7e14;
+$yellow:  #ffc107;
+$green:   #198754;
+$teal:    #20c997;
+$cyan:    #0dcaf0;
+$light-red: #f6d4d6;
+
+// SYSTEM COLORS
+$primary: #0C1439;
+$dark: #0C1439;
+$secondary:     $gray-600;
+$success:       #00B554;
+$info:          #5D97D1;
+$warning:       #DB7000;
+$danger:        #D5113B;
+$light:         $gray-100;
+
+$primary-50: #0C143905 !default;
+$primary-100: #0C143910 !default;
+$primary-200: #0C143920 !default;
+$primary-300: #0C143930 !default;
+$primary-400: #0C143940 !default;
+$primary-500: #0C143950 !default;
+$primary-600: #0C143960 !default;
+$primary-700: #0C143970 !default;
+$primary-800: #0C143980 !default;
+$primary-900: #0C143990 !default;

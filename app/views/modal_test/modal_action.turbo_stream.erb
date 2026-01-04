@@ -1,0 +1,5 @@
+<%= turbo_stream.update("action-change-modal", html: "<span> #{@some_parameter}</span>".html_safe) %>
+
+<%= render "shared/close_modal", { modal_body_id: "modal-body" } %>
+<%= render "shared/close_modal", { modal_body_id: "modal-different-layout-body" } %>
+

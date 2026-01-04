@@ -1,0 +1,3 @@
+<% modal_type_partial = @modal_type == "modal_a" ? "modal_body_a" : "modal_body_b"  %>
+<%= turbo_stream.update("modal-body", partial: "modal_test/#{modal_type_partial}") %>
+

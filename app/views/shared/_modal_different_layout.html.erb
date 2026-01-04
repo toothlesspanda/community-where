@@ -1,0 +1,17 @@
+<div class="modal fade" id="different-modal" tabindex="-1" data-controller="modal" data-turbo-permanent data-modal-frame-id-value="modal-different-layout-body">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content d-inline rounded-5">
+      <div class="modal-header bg-warning rounded-top-5">
+        Title
+        <div class="position-absolute end-0 px-4">
+          <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+      </div>
+      <div class="modal-body p-4 d-flex flex-column align-items-center">
+        This is a modal with a different layout
+        <%= turbo_frame_tag "modal-different-layout-body" do %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
