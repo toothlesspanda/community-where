@@ -36,7 +36,7 @@ points = [
     name: "Point 5",
     description: "something about point 5",
     coordinates: factory.point(-9.1458, 38.7401)
-  },
+  }
 ]
 
 points.each do |point|
