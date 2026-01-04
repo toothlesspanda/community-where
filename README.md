@@ -177,27 +177,11 @@ docker run -d -p 80:80 \
 
 ---
 
-## 8️⃣ Roadmap
-
-Planned features:
-
-- Users can add map markers
-- Community validation:
-  > “Validated by X people”
-- Admin moderation
-- Categories for locations
-- Open contributions
-
-Contributions welcome!
-
----
-
 ## 9️⃣ Development guidelines
 
 - Keep secrets out of git
 - Prefer small PRs
 - Add seeds when useful
-- Document new features in README
 
 ---
 
