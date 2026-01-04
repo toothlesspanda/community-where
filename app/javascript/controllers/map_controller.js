@@ -1,14 +1,5 @@
-
 import { Controller } from "@hotwired/stimulus"
 import L from 'leaflet'
-
-// Estilo do ícone padrão (Leaflet precisa disto manualmente via JS)
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: null,
-  iconUrl: null,
-  shadowUrl: null,
-});
 
 export default class extends Controller {
   static targets = ["map", "field"]
@@ -26,9 +17,8 @@ export default class extends Controller {
   }
 
   addMarker(place) {
-    const [latitude, longitude] = place;
-    L.marker([latitude, longitude])
+    L.marker([place.latitude, place.longitude])
         .addTo(this.map)
-        .bindPopup(`<div>latitude: ${latitude}</div><div>longitude: ${longitude}</div>`)
+        .bindPopup(`<div>Title: ${place.name}</div><div>Description: ${place.description}</div>`)
   }
 }

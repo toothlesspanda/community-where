@@ -11,4 +11,6 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root "home#index"
+
+  post "/create_markup", to: "home#create_markup", as: :create_markup
 end

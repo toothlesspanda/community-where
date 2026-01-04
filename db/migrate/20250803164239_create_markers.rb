@@ -1,4 +1,4 @@
-class CreateMarkups < ActiveRecord::Migration[8.0]
+class CreateMarkers < ActiveRecord::Migration[8.0]
   def change
     enable_extension "postgis"
 
