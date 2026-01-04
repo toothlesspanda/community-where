@@ -1,4 +1,5 @@
-# community-where <span style="font-size: 12px; border-radius: 10px;padding: 5px ; width: fit-content; background-color: rgba(255,230,100,0.4);color: white"> in progress</span>
+# community-where 
+<span style="font-size: 12px; border-radius: 10px;padding: 5px ; width: fit-content; background-color: rgba(255,230,100,0.4);color: white"> in progress</span>
 
 Community-where is an open-source Rails app that lets people map useful resources in their neighborhoods —  
 things like:
