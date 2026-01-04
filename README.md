@@ -1,5 +1,5 @@
 # community-where 
-<span style="font-size: 12px; border-radius: 10px;padding: 5px ; width: fit-content; background-color: rgba(255,230,100,0.4);color: white"> in progress</span>
+<img src="https://img.shields.io/static/v1?label=status&message=in+progress+non-production&color=dd9900">
 
 Community-where is an open-source Rails app that lets people map useful resources in their neighborhoods —  
 things like:
