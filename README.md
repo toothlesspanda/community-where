@@ -91,19 +91,19 @@ bin/rails db:create db:migrate
 
 ### Option A — run each process manually
 
-**Terminal 1 — Rails**
+**Rails**
 
 ```bash
 bin/rails server
 ```
 
-**Terminal 2 — JS build watcher**
+**JS build watcher**
 
 ```bash
 yarn build --watch
 ```
 
-**Terminal 3 — CSS watcher**
+**CSS watcher**
 
 ```bash
 yarn build:css:watch
@@ -117,7 +117,7 @@ http://localhost:3000
 
 ---
 
-### Option B — using Procfile (Foreman / Overmind)
+### Option B — using Procfile (Foreman)
 
 If you have `foreman`:
 
