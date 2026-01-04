@@ -25,7 +25,7 @@ Users can place markers on the map, and the community can **validate** them
 
 ---
 
-## 1️⃣ Requirements
+## Requirements
 
 Make sure you have:
 
@@ -48,7 +48,7 @@ yarn -v
 
 ---
 
-## 2️⃣ Clone & install dependencies
+## Clone & install dependencies
 
 ```bash
 git clone https://github.com/your-username/community-where.git
@@ -59,7 +59,7 @@ yarn install
 
 ---
 
-## 3️⃣ Configure credentials
+## Configure credentials
 
 Rails uses encrypted credentials.  
 You should **NOT commit** `config/master.key`.
@@ -79,7 +79,7 @@ Keep `master.key` private.
 
 ---
 
-## 4️⃣ Create and migrate the database
+## Create and migrate the database
 
 ```bash
 bin/rails db:create db:migrate
@@ -87,7 +87,7 @@ bin/rails db:create db:migrate
 
 ---
 
-## 5️⃣ Running the app (development)
+## Running the app (development)
 
 ### Option A — run each process manually
 
@@ -136,7 +136,7 @@ css: yarn build:css:watch
 
 ---
 
-## 6️⃣ Front-end build details
+## Front-end build details
 
 `package.json` contains:
 
@@ -157,7 +157,7 @@ Stimulus is used especially for the **map controller**.
 
 ---
 
-## 7️⃣ Docker (production-style build)
+## Docker (production-style build)
 
 > ⚠️ This Dockerfile is meant for production, not local dev.
 
@@ -177,7 +177,7 @@ docker run -d -p 80:80 \
 
 ---
 
-## 9️⃣ Development guidelines
+## Development guidelines
 
 - Keep secrets out of git
 - Prefer small PRs
@@ -185,7 +185,7 @@ docker run -d -p 80:80 \
 
 ---
 
-## 10️⃣ Troubleshooting
+## Troubleshooting
 
 **Assets not compiling?**
 
