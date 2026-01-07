@@ -13,12 +13,26 @@ export default class extends Controller {
       attribution: '&copy; OpenStreetMap'
     }).addTo(this.map)
 
-    this.latlongValue.forEach(place => this.addMarker(place))
+    this.latlongValue.forEach(marker => this.addMarker(marker))
   }
 
-  addMarker(place) {
-    L.marker([place.latitude, place.longitude])
+  addMarker(marker) {
+    let categories = ""
+    marker.categories.forEach((cat, index) => {
+      if(!cat.parent_id) return;
+      categories+= `<span class="badge text-bg-primary ${index !== 0 ? "ms-2" : ""}"> ${cat.code}</span>`
+    })
+    L.marker([marker.marker.latitude, marker.marker.longitude])
         .addTo(this.map)
-        .bindPopup(`<div>Title: ${place.name}</div><div>Description: ${place.description}</div>`)
+        .bindPopup(`
+          <div>
+             <span class="fs-5">${marker.marker.name}</span>
+              <p class="my-1 text-muted">${marker.marker.description}</p>
+              <div class="my-3">
+                  ${categories}
+              </div>
+          </div>
+ 
+        `)
   }
 }
