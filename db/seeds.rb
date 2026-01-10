@@ -1,13 +1,21 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+deposit = Category.find_or_create_by!(code: "deposit")
+transportation = Category.find_or_create_by!(code: "transportation")
+sports = Category.find_or_create_by!(code: "sports")
+donations = Category.find_or_create_by!(code: "donations")
+animals = Category.find_or_create_by!(code: "animals")
 
+deposit_categories = %w[paper organic glass plastic electronics lamps oils clothes]
+
+transportation_categories = %w[electric_charge electric_bikes bikes_park]
+sports_categories = %w[futsal_field volleyball_field skate_park]
+donations_categories = %w[kids moms food toys]
+animals_categories = %w[canil gatil shelter hospital parks]
+
+deposit_categories.each { | d| Category.find_or_create_by!(code: d, parent: deposit) }
+transportation_categories.each { | d| Category.find_or_create_by!(code: d, parent: transportation) }
+sports_categories.each { | d| Category.find_or_create_by!(code: d, parent: sports) }
+donations_categories.each { | d| Category.find_or_create_by!(code: d, parent: donations) }
+animals_categories.each { | d| Category.find_or_create_by!(code: d, parent: animals) }
 
 factory = RGeo::Geographic.spherical_factory(srid: 4326)
 
@@ -40,11 +48,14 @@ points = [
 ]
 
 points.each do |point|
-  Marker.create!(
+  marker = Marker.create!(
     name: point[:name],
     description: point[:description],
     longitude: point[:coordinates].longitude,
     latitude: point[:coordinates].latitude,
     coordinates: point[:coordinates],
-  )
+    )
+  category = Category.with_parent.shuffle.first
+  MarkerCategory.create!(marker: marker, category: category)
 end
+
