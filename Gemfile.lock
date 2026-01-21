@@ -247,7 +247,7 @@ GEM
     reline (0.6.3)
       io-console (~> 0.5)
     rexml (3.4.1)
-    rgeo (3.0.1)
+    rgeo (3.1.0)
     rgeo-activerecord (8.1.0)
       activerecord (>= 8.1, < 8.2)
       rgeo (>= 3.0)
