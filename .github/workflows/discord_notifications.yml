@@ -17,40 +17,44 @@ jobs:
         PR_NUMBER: ${{ github.event.pull_request.number }}
         PR_URL: ${{ github.event.pull_request.html_url }}
         PR_USER: ${{ github.actor }}
+        PR_AVATAR: ${{ github.event.pull_request.user.avatar_url }} # Link da foto
         REPO_NAME: ${{ github.repository }}
       run: |
-          COLOR_OPENED=3066993  # Blue
-          COLOR_MERGED=7291585  # Merged color
-          COLOR_CLOSED=15158332 # Red (closed)
+        COLOR_OPENED=3066993 
+        COLOR_MERGED=7291585 
+        COLOR_CLOSED=15158332
         
-          SELECTED_COLOR=$COLOR_OPENED
-          
-          if [ "$PR_STATUS" == "closed" ]; then
-            if [ "$PR_MERGED" == "true" ]; then
-              SELECTED_COLOR=$COLOR_MERGED
-              PR_STATUS="merged"
-            else
-              SELECTED_COLOR=$COLOR_CLOSED
-            fi
+        SELECTED_COLOR=$COLOR_OPENED
+        if [ "$PR_STATUS" == "closed" ]; then
+          if [ "$PR_MERGED" == "true" ]; then
+            SELECTED_COLOR=$COLOR_MERGED
+            PR_STATUS="merged"
+          else
+            SELECTED_COLOR=$COLOR_CLOSED
           fi
-          
-          PAYLOAD=$(jq -n \
-            --arg title "GitHub #$PR_NUMBER - $PR_STATUS: $PR_TITLE" \
-            --arg url "$PR_URL" \
-            --arg color "$SELECTED_COLOR" \
-            --arg author "$PR_USER" \
-            --arg repo "$REPO_NAME" \
-            '{
-              embeds: [{
-                title: $title,
-                url: $url,
-                color: ($color | tonumber),
-                fields: [
-                  { name: "Autor", value: $author, inline: true },
-                  { name: "Repositório", value: $repo, inline: true }
-                ],
-                footer: { text: "GitHub Actions" }
-              }]
-            }')
-          
-          curl -H "Content-Type: application/json" -X POST -d "$PAYLOAD" $DISCORD_WEBHOOK
+        fi
+        
+        PAYLOAD=$(jq -n \
+          --arg title "GitHub #$PR_NUMBER - $PR_STATUS: $PR_TITLE" \
+          --arg url "$PR_URL" \
+          --arg color "$SELECTED_COLOR" \
+          --arg author_name "$PR_USER" \
+          --arg author_icon "$PR_AVATAR" \
+          --arg repo "$REPO_NAME" \
+          '{
+            embeds: [{
+              author: {
+                name: $author_name,
+                icon_url: $author_icon
+              },
+              title: $title,
+              url: $url,
+              color: ($color | tonumber),
+              fields: [
+                { name: "Repository", value: $repo, inline: true }
+              ],
+              footer: { text: "GitHub Actions" }
+            }]
+          }')
+        
+        curl -H "Content-Type: application/json" -X POST -d "$PAYLOAD" $DISCORD_WEBHOOK
