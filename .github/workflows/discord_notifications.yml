@@ -8,8 +8,32 @@ jobs:
     if: github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
-      - name: Send Webhook
-        run: |
-          curl -H "Content-Type: application/json" \
-          -d '{"content": "Novo PR: ${{ github.event.pull_request.title }} por ${{ github.actor }}"}' \
-          ${{ secrets.DISCORD_WEBHOOK_URL }}
+    - name: Send Discord Webhook
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        PR_STATUS: ${{ github.event.action }}
+        PR_TITLE: ${{ github.event.pull_request.title }}
+        PR_URL: ${{ github.event.pull_request.html_url }}
+        PR_USER: ${{ github.actor }}
+      run: |
+        # Define a cor
+        COLOR=3066993
+        if [ "$PR_STATUS" == "closed" ]; then COLOR=15158332; fi
+        
+        # Monta o JSON de forma segura usando jq
+        PAYLOAD=$(jq -n \
+          --arg title "PR $PR_STATUS: $PR_TITLE" \
+          --arg url "$PR_URL" \
+          --arg color "$COLOR" \
+          --arg author "$PR_USER" \
+          '{
+            embeds: [{
+              title: $title,
+              url: $url,
+              color: ($color | tonumber),
+              fields: [{ name: "Autor", value: $author, inline: true }],
+              footer: { text: "GitHub Actions" }
+            }]
+          }')
+        
+        curl -H "Content-Type: application/json" -X POST -d "$PAYLOAD" $DISCORD_WEBHOOK
