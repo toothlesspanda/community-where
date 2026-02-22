@@ -58,4 +58,3 @@ points.each do |point|
   category = Category.with_parent.shuffle.first
   MarkerCategory.create!(marker: marker, category: category)
 end
-

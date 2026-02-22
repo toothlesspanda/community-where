@@ -1,8 +1,71 @@
 <!--<div id="map" style="height: 400px;"></div>-->
 
 <div data-controller="map"
-     data-map-latlong-value="<%=@markers.to_json%>">
+     data-map-url-value="<%= markers_url %>"
+>
 
-  <div data-map-target="map" class="w-100 vh-100"></div>
+  <div data-map-target="map" class="w-100 vh-100 z-0"></div>
   <%#= form.hidden_field :coordinates, data: { map_target: "field" } %>
+
+  <div class="position-absolute top-0 end-0 z-1 ">
+    <div class="card mb-5 m-3" style="width: 250px">
+      <div class="card-body">
+        <h2> Filter </h2>
+
+        <%= form_with url: "", method: :get,
+        data: {
+          map_target: "form",
+          action: "change->map#filtersChanged"
+        },
+        id: "map-filter" do %>
+
+          <div class="accordion" id="categoriesAccordion">
+            <% @parent_categories.each_with_index do |parent, index| %>
+
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="heading-<%= parent.id %>">
+                  <button
+                    class="accordion-button collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapse-<%= parent.id %>"
+                    aria-expanded="false"
+                    aria-controls="collapse-<%= parent.id %>"
+                  >
+                    <%= parent.code %>
+                  </button>
+                </h2>
+
+                <div
+                  id="collapse-<%= parent.id %>"
+                  class="accordion-collapse collapse"
+                  data-bs-parent="#categoriesAccordion"
+                >
+                  <div class="accordion-body">
+
+                    <% parent.children.each do |child| %>
+                      <div class="form-check">
+                        <%= check_box_tag "category_ids[]",
+                                          child.id,
+                                          params[:category_ids]&.include?(child.id.to_s),
+                                          class: "form-check-input",
+                                          id: "cat_#{child.id}" %>
+
+                        <%= label_tag "cat_#{child.id}",
+                                      child.code,
+                                      class: "form-check-label" %>
+                      </div>
+                    <% end %>
+
+                  </div>
+                </div>
+              </div>
+
+            <% end %>
+          </div>
+
+        <% end %>
+      </div>
+    </div>
+  </div>
 </div>
