@@ -2,14 +2,15 @@
 
 <div data-controller="map"
      data-map-url-value="<%= markers_url %>"
+     class="position-relative vh-100"
 >
 
-  <div data-map-target="map" class="w-100 vh-100 z-0"></div>
+  <div data-map-target="map" class="w-100 h-100 z-0"></div>
   <%#= form.hidden_field :coordinates, data: { map_target: "field" } %>
 
-  <div class="position-absolute top-0 end-0 z-1 ">
-    <div class="card mb-5 m-3" style="width: 250px">
-      <div class="card-body">
+  <div class="position-absolute top-0 end-0 z-1 h-100">
+    <div class="card m-3" style="width: 250px; max-height: calc(100% - 2rem);">
+      <div class="card-body overflow-auto">
         <h2> Filter </h2>
 
         <%= form_with url: "", method: :get,
