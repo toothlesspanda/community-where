@@ -1,14 +1,20 @@
 import { Controller } from "@hotwired/stimulus"
 import L from 'leaflet'
+import { loadLocation } from "../location"
 
 export default class extends Controller {
   static targets = ["map", "field", "form"]
-  static values = { latlong: Array, url: String }
+  static values = { url: String }
 
   // static values = { url: String }
 
   async connect() {
-    this.map = L.map(this.mapTarget).setView([this.latValue || 38.736946, this.lngValue || -9.142685], 13)
+    const location = await loadLocation()
+
+    const lat = location?.lat
+    const long = location?.long
+
+    this.map = L.map(this.mapTarget).setView([lat, long], 13)
 
     L.tileLayer('https://api.maptiler.com/maps/dataviz/{z}/{x}/{y}.png?key=F9todpBjCHkc7mTUrK6i', {
       maxZoom: 19,
