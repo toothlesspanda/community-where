@@ -11,8 +11,6 @@ export function loadLocation() {
 
         navigator.geolocation.getCurrentPosition(
             (position) => {
-                console.log(position)
-
                 localStorage.setItem("lat", position.coords.latitude.toString())
                 localStorage.setItem("long", position.coords.longitude.toString())
                 resolve({ lat: position.coords.latitude, long: position.coords.longitude })
