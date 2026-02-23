@@ -1,9 +1,7 @@
 <!--<div id="map" style="height: 400px;"></div>-->
+<!--<div data-controller="location"></div>-->
 
-<div data-controller="map"
-     data-map-url-value="<%= markers_url %>"
-     class="position-relative vh-100"
->
+<div data-controller="map" data-map-url-value="<%= markers_url %>" class="position-relative vh-100">
 
   <div data-map-target="map" class="w-100 h-100 z-0"></div>
   <%#= form.hidden_field :coordinates, data: { map_target: "field" } %>
