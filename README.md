@@ -86,6 +86,36 @@ Keep `master.key` private.
 bin/rails db:create db:migrate
 ```
 
+### Geographical Data Import 
+
+Only data from Portugal was retrieved.  
+Source: https://gadm.org/download_country.html.
+
+The project uses the LEVEL 3 GeoJSON file as the base source, for the most granularity of administrative units.
+
+Three scripts are used to populate and maintain the geographic data:
+
+1. **Import script**  
+This script reads the LEVEL 3 GeoJSON file, creates the base records in the places table, and builds the hierarchical relationships between administrative levels.
+
+```bash
+rails runner script/import_places.rb
+```
+
+2. **Parent relations mapping**  
+This script recalculates and assigns representative coordinates to parent records (e.g., municipalities and districts) based on their children.
+
+```bash
+rails runner script/update_parent_coordinates.rb
+```
+
+3. **Normalize names**  
+Some names come with "de"/"da"/"dos" in the middle and sticked with the whole name, lacking of blank spaces
+
+```bash
+rails runner script/normalize_places_names.rb
+```
+
 ---
 
 ## Running the app (development)
