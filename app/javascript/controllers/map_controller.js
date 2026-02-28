@@ -3,12 +3,29 @@ import L from 'leaflet'
 import "leaflet.markercluster"
 
 import { loadLocation } from "../location"
+import * as bootstrap from "bootstrap"
 
 export default class extends Controller {
   static targets = ["map", "field", "form"]
   static values = { url: String }
 
   async connect() {
+    this.addMode = false
+    const coordinates = await this.setupLocation()
+
+    this.setupMap(coordinates);
+
+    await this.loadMarkers()
+
+    this.map.on("moveend", this.loadMarkers.bind(this))
+    this.map.on("click", this.handleMapClick.bind(this))
+
+    window.addEventListener("city:selected", this.handleCitySelected)
+    this.modal = new bootstrap.Modal(document.getElementById("newMarker"))
+  }
+
+
+  async setupLocation(){
     const location = await loadLocation()
 
     const lat = location?.lat
@@ -22,9 +39,11 @@ export default class extends Controller {
       currentLocationElem.innerText = location.name
     }
 
-    this.map = L.map(this.mapTarget, {
-      zoomControl: false
-    }).setView([lat, long], 13)
+    return [lat, long]
+  }
+
+  setupMap(coordinates){
+    this.map = L.map(this.mapTarget, {zoomControl: false}).setView(coordinates, 13)
 
     L.control.zoom({
       position: "bottomright"
@@ -35,7 +54,6 @@ export default class extends Controller {
       attribution: '&copy; OpenStreetMap',
     }).addTo(this.map)
 
-    // this.markersLayer = L.layerGroup().addTo(this.map)
 
     this.markersLayer = L.markerClusterGroup({
       showCoverageOnHover: false,
@@ -50,18 +68,13 @@ export default class extends Controller {
     })
 
     this.map.addLayer(this.markersLayer)
-
-    await this.loadMarkers()
-
-    this.map.on("moveend", () => {
-      this.loadMarkers()
-    })
-
-    window.addEventListener("city:selected", this.handleCitySelected)
   }
 
-  filtersChanged() {
-    this.debouncedLoad()
+  enableAddMode() {
+    this.addMode = true
+
+    // feedback visual
+    this.map.getContainer().style.cursor = "crosshair"
   }
 
   debouncedLoad() {
@@ -143,5 +156,19 @@ export default class extends Controller {
     }
 
     this.map.setView([lat, lng], zoom)
+  }
+
+  handleMapClick(e) {
+    if (!this.addMode) return
+    const { lat, lng } = e.latlng
+
+    document.getElementById("latField").value = lat
+    document.getElementById("lngField").value = lng
+
+    this.modal.show()
+
+    // sair do modo automaticamente
+    this.addMode = false
+    this.map.getContainer().style.cursor = ""
   }
 }

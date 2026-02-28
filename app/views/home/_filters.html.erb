@@ -1,8 +1,10 @@
-<div class="card mt-3 rounded-4" style="max-height: 80vh;">
-  <div class="card-body overflow-auto">
+
+<div class="divider"></div>
+<div class="" style="max-height: 70vh; overflow: auto;">
+  <div class="overflow-auto">
     <span class="fs-3"> Filter </span>
 
-    <%= form_with url: "", method: :get, id: "map-filter", data: { map_target: "form", action: "change->map#filtersChanged" } do %>
+    <%= form_with url: "", method: :get, class: "mt-2", id: "map-filter", data: { map_target: "form", action: "change->map#filtersChanged" } do %>
 
       <div class="accordion" id="categoriesAccordion" class="border-0">
         <% @parent_categories.each do |parent| %>
@@ -38,5 +40,20 @@
       </div>
 
     <% end %>
+  </div>
+
+  <div class="divider"></div>
+  <div class="d-flex justify-content-end w-100">
+
+    <div class="btn-group" role="group" aria-label="Basic example">
+      <button type="button" class="btn btn-link btn-mute text-decoration-none text-muted d-flex flex-column" data-action="map#enableAddMode">
+          <i class="bi bi-geo-alt fs-5"></i>
+          <span> Novo Ponto </span>
+      </button>
+      <button type="button" class="btn btn-link btn-mute text-decoration-none text-muted d-flex flex-column">
+        <i class="bi bi-chat-left-heart fs-5"></i>
+        <span> Sugestões </span>
+      </button>
+    </div>
   </div>
 </div>

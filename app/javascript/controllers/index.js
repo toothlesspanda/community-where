@@ -9,3 +9,6 @@ application.register("map", MapController)
 
 import SearchController from "./search_controller"
 application.register("search", SearchController)
+
+import NewMarkerController from "./new_marker_controller"
+application.register("new-marker", NewMarkerController)

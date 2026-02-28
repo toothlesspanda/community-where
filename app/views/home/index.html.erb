@@ -2,15 +2,15 @@
 
   <div data-controller="map" data-map-url-value="<%= markers_url %>" class="position-relative vh-100">
     <div data-map-target="map" class="w-100 h-100 z-0"></div>
-
-    <div class="position-absolute d-inline top-0 end-0 p-3 z-2">
+    <div class="side-panel position-absolute d-inline top-0 end-0 p-3 z-2">
         <%= render "home/search" %>
 
-      <div class="position-relative d-flex justify-content-end" >
-      <span class="d-none d-md-block w-auto" style="max-width: 350px;">
-        <%= render "home/filters" %>
-      </span>
+      <div class="position-relative">
+        <span class="d-none d-md-block w-auto">
+          <%= render "home/filters" %>
+        </span>
       </div>
+
     </div>
 
     <span class="bg-white rounded-4 p-1 opacity-50 position-absolute bottom-0 start-0 z-3 ms-2 mb-2">
@@ -23,3 +23,5 @@
   </div>
 
 </div>
+
+<%= render "home/new_marker_modal" %>

@@ -10,4 +10,8 @@ class Category < ApplicationRecord
   # def label
   #   I18n.t(code, scope: "categories", default: code.humanize)
   # end
+
+  def human_name
+    code.to_s.humanize
+  end
 end
