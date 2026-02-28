@@ -1,14 +1,7 @@
-<div data-controller="search" class="d-flex w-100 justify-content-center mt-3" style="max-height: fit-content;">
-  <div class="search-container me-2">
-    <span class="bg-white rounded-4 p-1 opacity-50">
-      <i class="bi bi-crosshair text-info"></i>
-      <span class="text-muted">Your current location:
-        <span id="current-location"></span>
-      </span>
-    </span>
+<div data-controller="search" style="max-height: fit-content;">
+  <div>
 
-
-    <div class="input-group input-group-lg z-1">
+    <div class="input-group z-1 mt-2">
       <span style="color: #adadad" class="input-group-text bg-white p-0" id="search-label">
            <button class="btn h-100 d-inline d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMenuFilters" aria-expanded="false" aria-controls="collapseMenuFilters">
             <i class="bi bi-list"></i>
@@ -21,11 +14,11 @@
              data-action="input->search#search"
         />
     </div>
+    <div style="max-height: 300px;" data-search-target="suggestions" class="position-absolute card d-none z-2 mt-2 overflow-auto p-2 z-3"></div>
     <div style="">
       <div class="collapse d-md-none" id="collapseMenuFilters">
           <%= render "home/filters" %>
       </div>
     </div>
-    <div style="max-height: 300px;" data-search-target="suggestions" class="card d-none z-2 mt-2 overflow-auto p-2"></div>
   </div>
 </div>

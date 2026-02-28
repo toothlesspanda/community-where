@@ -1,21 +1,62 @@
 // Entry point for your Sass build
+@import "leaflet.markercluster/dist/MarkerCluster.css";
 @import "bootstrap/scss/bootstrap";
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css");
 //@import "leafleft";
 
-.map-dot-filter{
+
+.custom-cluster {
+  background: #4CAF50;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+
+  box-shadow: 0 0 6px rgba(0,0,0,0.2);
+}
+
+.map-dot{
   width:16px;
   height:16px;
   border-radius:50%;
   border:2px solid white;
   margin-right: 16px;
   box-shadow:0 0 4px rgba(0,0,0,0.3);
+
+}
+
+.map-dot-cluster {
+  @extend .map-dot;
+  background: #4CAF50;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
 }
 
 .search-container {
-  width: 100%;
-  max-width: 80%;
+  max-width: 50%;
   height: fit-content;
+}
+
+@media (min-width: 768px) {
+  .search-container {
+    max-width: 50%;
+  }
 }
 
 

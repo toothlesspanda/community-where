@@ -1,5 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 import L from 'leaflet'
+import "leaflet.markercluster"
+
 import { loadLocation } from "../location"
 
 export default class extends Controller {
@@ -30,10 +32,24 @@ export default class extends Controller {
 
     L.tileLayer('https://api.maptiler.com/maps/dataviz/{z}/{x}/{y}.png?key=F9todpBjCHkc7mTUrK6i', {
       maxZoom: 19,
-      attribution: '&copy; OpenStreetMap'
+      attribution: '&copy; OpenStreetMap',
     }).addTo(this.map)
 
-    this.markersLayer = L.layerGroup().addTo(this.map)
+    // this.markersLayer = L.layerGroup().addTo(this.map)
+
+    this.markersLayer = L.markerClusterGroup({
+      showCoverageOnHover: false,
+      maxClusterRadius: 50,
+      iconCreateFunction: function(cluster) {
+        return L.divIcon({
+          html: `<div class="map-dot-cluster">${cluster.getChildCount()}</div>`,
+          className: "",
+          iconSize: [40, 40]
+        })
+      }
+    })
+
+    this.map.addLayer(this.markersLayer)
 
     await this.loadMarkers()
 
@@ -107,15 +123,8 @@ export default class extends Controller {
     return L.divIcon({
       className: "",
       html: `
-      <div style="
-        background:${color};
-        width:16px;
-        height:16px;
-        border-radius:50%;
-        border:2px solid white;
-        box-shadow:0 0 4px rgba(0,0,0,0.3);
-      "></div>
-    `,
+        <div class="map-dot" style="background:${color};"></div>
+      `,
       iconSize: [16, 16],
       iconAnchor: [8, 8]
     })

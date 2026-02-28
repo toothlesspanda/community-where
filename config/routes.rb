@@ -6,11 +6,6 @@ Rails.application.routes.draw do
   root "home#index"
   post "/create_markup", to: "home#create_markup", as: :create_markup
   resources :markers
-  get "locations/autocomplete"
   get "places/autocomplete"
-  resources :places do
-    member do
-      get "places/autocomplete"
-    end
-  end
+  resources :places
 end
