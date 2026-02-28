@@ -11,8 +11,22 @@ export default class extends Controller {
 
     const lat = location?.lat
     const long = location?.long
+    const currentLocationElem = document.getElementById("current-location")
 
-    this.map = L.map(this.mapTarget).setView([lat, long], 13)
+    if(location.name == null){
+      currentLocationElem.parentElement.parentElement.classList.add("d-none")
+    } else {
+      currentLocationElem.parentElement.parentElement.classList.remove("d-none")
+      currentLocationElem.innerText = location.name
+    }
+
+    this.map = L.map(this.mapTarget, {
+      zoomControl: false
+    }).setView([lat, long], 13)
+
+    L.control.zoom({
+      position: "bottomright"
+    }).addTo(this.map)
 
     L.tileLayer('https://api.maptiler.com/maps/dataviz/{z}/{x}/{y}.png?key=F9todpBjCHkc7mTUrK6i', {
       maxZoom: 19,
@@ -90,7 +104,6 @@ export default class extends Controller {
   }
 
   coloredIcon(color) {
-    console.log(color)
     return L.divIcon({
       className: "",
       html: `

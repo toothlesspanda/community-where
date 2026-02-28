@@ -14,30 +14,8 @@ export default class extends Controller {
 
     const response = await fetch(`/places/autocomplete?query=${query}`)
     const cities = await response.json()
-
-    console.log(cities)
     this.renderSuggestions(cities)
   }
-
-  // async search(event) {
-  //   const query = event.target.value.trim()
-  //
-  //   if (query.length < 3) return
-  //
-  //   const response = await fetch(
-  //       `https://api.maptiler.com/geocoding/${query}.json?key=YOUR_KEY&types=place,region&country=pt`
-  //   )
-  //
-  //   const data = await response.json()
-  //
-  //   const cities = data.features.map(f => ({
-  //     name: f.text,
-  //     lat: f.center[1],
-  //     lng: f.center[0]
-  //   }))
-  //
-  //   this.renderSuggestions(cities)
-  // }
 
   renderSuggestions(cities) {
     this.suggestionsTarget.classList.remove("d-none")
@@ -72,7 +50,6 @@ export default class extends Controller {
           detail: city
         })
     )
-    this.centerOnPlace(city)
     this.suggestionsTarget.classList.add("d-none")
   }
 }

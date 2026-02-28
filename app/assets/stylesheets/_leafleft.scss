@@ -1,0 +1,35 @@
+/* remove estilo default */
+.leaflet-control-zoom.leaflet-bar {
+  border: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+/* estilo tipo Bootstrap button */
+.leaflet-control-zoom a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 36px;
+  height: 36px;
+
+  background-color: white;
+  border: 1px solid #dee2e6;
+  border-radius: 0.5rem;
+
+  color: #212529;
+  font-weight: 600;
+
+  transition: all 0.15s ease-in-out;
+}
+
+/* hover */
+.leaflet-control-zoom a:hover {
+  background-color: #f8f9fa;
+}
+
+/* spacing between + and - */
+.leaflet-control-zoom a + a {
+  margin-top: 6px;
+}

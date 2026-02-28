@@ -26,6 +26,26 @@ class PlacesController < ApplicationController
     }
   end
 
+  def index
+    lat = params[:lat]
+    long = params[:long]
+
+    point = ActiveRecord::Base.sanitize_sql_array(
+      ["ST_GeogFromText(?)", "SRID=4326;POINT(#{long} #{lat})" ]
+    )
+
+    place = Place
+              .where.not(coordinates: nil)
+              .order(Arel.sql("coordinates <-> #{point}"))
+              .first
+
+    render json: {
+      name: formatted_name(place),
+      lat: place.coordinates.latitude,
+      lng: place.coordinates.longitude
+    }
+  end
+
   private
 
   def formatted_name(place)

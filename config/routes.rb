@@ -8,4 +8,9 @@ Rails.application.routes.draw do
   resources :markers
   get "locations/autocomplete"
   get "places/autocomplete"
+  resources :places do
+    member do
+      get "places/autocomplete"
+    end
+  end
 end
