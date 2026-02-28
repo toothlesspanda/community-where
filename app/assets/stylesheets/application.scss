@@ -1,2 +1,37 @@
 // Entry point for your Sass build
 @import "bootstrap/scss/bootstrap";
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css");
+
+.leaflet-bar{
+  border-radius: 100px !important;
+}
+
+/* Container */
+.leaflet-control-zoom {
+  border: none;
+  box-shadow: none;
+}
+
+/* Botões */
+.leaflet-control-zoom a {
+  background: #1f2937;        /* dark */
+  color: white;
+  border-radius: 100px;
+  margin-bottom: 6px;
+  width: 36px;
+  height: 36px;
+  line-height: 36px;
+  font-size: 18px;
+  transition: all 0.2s ease;
+}
+
+/* Hover */
+.leaflet-control-zoom a:hover {
+  background: #111827;
+}
+
+/* Remove default borders */
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+  border: none !important;
+}

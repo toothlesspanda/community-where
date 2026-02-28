@@ -6,8 +6,6 @@ export default class extends Controller {
   static targets = ["map", "field", "form"]
   static values = { url: String }
 
-  // static values = { url: String }
-
   async connect() {
     const location = await loadLocation()
 
@@ -24,6 +22,12 @@ export default class extends Controller {
     this.markersLayer = L.layerGroup().addTo(this.map)
 
     await this.loadMarkers()
+
+    this.map.on("moveend", () => {
+      this.loadMarkers()
+    })
+
+    window.addEventListener("city:selected", this.handleCitySelected)
   }
 
   filtersChanged() {
@@ -40,6 +44,15 @@ export default class extends Controller {
 
   async loadMarkers() {
     const params = new URLSearchParams(new FormData(this.formTarget))
+
+    const bounds = this.map.getBounds()
+
+    params.append("bbox", [
+      bounds.getWest(),
+      bounds.getSouth(),
+      bounds.getEast(),
+      bounds.getNorth()
+    ].join(","))
 
     const response = await fetch(`${this.urlValue}?${params}`,{ headers: { "Accept": "application/json" }})
     const data = await response.json()
@@ -60,7 +73,9 @@ export default class extends Controller {
       categories+= `<span class="badge text-bg-primary ${index !== 0 ? "ms-2" : ""}"> ${cat.parent}: ${cat.code}</span>`
     })
 
-    L.marker([marker.latitude, marker.longitude])
+    L.marker(
+        [marker.latitude, marker.longitude],
+        { icon: this.coloredIcon(marker.categories[0].color) })
         .addTo(this.markersLayer)
         .bindPopup(`
           <div>
@@ -72,5 +87,39 @@ export default class extends Controller {
           </div>
  
         `)
+  }
+
+  coloredIcon(color) {
+    console.log(color)
+    return L.divIcon({
+      className: "",
+      html: `
+      <div style="
+        background:${color};
+        width:16px;
+        height:16px;
+        border-radius:50%;
+        border:2px solid white;
+        box-shadow:0 0 4px rgba(0,0,0,0.3);
+      "></div>
+    `,
+      iconSize: [16, 16],
+      iconAnchor: [8, 8]
+    })
+  }
+
+  handleCitySelected = (event) => {
+    const { lat, lng, depth } = event.detail
+    let zoom
+
+    if (depth === 3) {
+      zoom = 14
+    } else if (depth === 2) {
+      zoom = 12
+    } else {
+      zoom = 9
+    }
+
+    this.map.setView([lat, lng], zoom)
   }
 }
