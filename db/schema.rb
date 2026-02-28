@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_28_014422) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_28_230421) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -24,6 +24,22 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_28_014422) do
     t.datetime "updated_at", null: false
     t.index ["code"], name: "index_categories_on_code", unique: true
     t.index ["parent_id"], name: "index_categories_on_parent_id"
+  end
+
+  create_table "marker_submissions", force: :cascade do |t|
+    t.bigint "category_id"
+    t.datetime "created_at", null: false
+    t.string "description", null: false
+    t.decimal "latitude", precision: 10, scale: 6, null: false
+    t.decimal "longitude", precision: 10, scale: 6, null: false
+    t.string "name", null: false
+    t.string "new_child_name"
+    t.string "new_parent_name"
+    t.bigint "parent_category_id"
+    t.datetime "updated_at", null: false
+    t.index ["category_id"], name: "index_marker_submissions_on_category_id"
+    t.index ["latitude", "longitude"], name: "index_marker_submissions_on_latitude_and_longitude"
+    t.index ["parent_category_id"], name: "index_marker_submissions_on_parent_category_id"
   end
 
   create_table "markers", force: :cascade do |t|
@@ -59,6 +75,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_28_014422) do
   end
 
   add_foreign_key "categories", "categories", column: "parent_id"
+  add_foreign_key "marker_submissions", "categories"
+  add_foreign_key "marker_submissions", "categories", column: "parent_category_id"
   add_foreign_key "markers_categories", "categories"
   add_foreign_key "markers_categories", "markers"
   add_foreign_key "places", "places", column: "parent_id"

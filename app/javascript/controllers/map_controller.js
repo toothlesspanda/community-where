@@ -165,6 +165,9 @@ export default class extends Controller {
     document.getElementById("latField").value = lat
     document.getElementById("lngField").value = lng
 
+    document.getElementById("latHidden").value = lat
+    document.getElementById("lngHidden").value = lng
+
     this.modal.show()
 
     // sair do modo automaticamente
