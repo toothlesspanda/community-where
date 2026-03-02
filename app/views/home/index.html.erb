@@ -1,6 +1,11 @@
 <div>
 
-  <div data-controller="map" data-map-url-value="<%= markers_url %>" class="position-relative vh-100">
+  <div id="map" data-controller="map" data-map-url-value="<%= markers_url %>" class="position-relative vh-100">
+    <div id="new-marker-message" class="position-absolute z-2 top-0 start-0 w-100 d-flex justify-content-center d-none">
+      <div class="text-center ms-2 mt-2 fw-bold" style="color: rgba(8,92,145,0.5)"> NOVO PONTO</div>
+      <div class="btn btn-mute" data-action="click->map#disableAddMode"> Close </div>
+    </div>
+
     <div data-map-target="map" class="w-100 h-100 z-0"></div>
     <div class="side-panel position-absolute d-inline top-0 end-0 p-3 z-2">
         <%= render "home/search" %>
@@ -24,4 +29,4 @@
 
 </div>
 
-<%= render "home/new_marker_modal" %>
+<%= render "marker_submissions/new_marker_modal" %>

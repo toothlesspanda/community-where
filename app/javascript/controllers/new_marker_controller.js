@@ -6,16 +6,23 @@ export default class extends Controller {
         "childSelect",
         "childSelectWrapper",
         "newChildWrapper",
-        "newParentWrapper"
+        "newParentWrapper",
+        "modal"
     ]
 
     connect() {
         this.categories = JSON.parse(this.parentSelectTarget.dataset.categories)
+        this.originalContent = this.element.querySelector("#new-marker-content").innerHTML
+        this.modalTarget.addEventListener("hidden.bs.modal", this.handleModalClosed.bind(this))
+    }
+
+    handleModalClosed() {
+        window.dispatchEvent(new CustomEvent("new-marker:closed"))
+
     }
 
     handleParentChange(event) {
         const value = event.target.value
-
 
         if (value === "other") {
             this.newParentWrapperTarget.classList.remove("d-none")

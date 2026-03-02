@@ -22,8 +22,14 @@ export default class extends Controller {
 
     window.addEventListener("city:selected", this.handleCitySelected)
     this.modal = new bootstrap.Modal(document.getElementById("newMarker"))
+    window.addEventListener("new-marker:closed", this.disableAddMode.bind(this))
   }
 
+  disconnect() {
+    document.removeEventListener("keydown", this.handleKeydown.bind(this))
+    window.removeEventListener("city:selected", this.handleCitySelected)
+    window.removeEventListener("new-marker:closed", this.disableAddMode.bind(this))
+  }
 
   async setupLocation(){
     const location = await loadLocation()
@@ -72,9 +78,18 @@ export default class extends Controller {
 
   enableAddMode() {
     this.addMode = true
-
-    // feedback visual
+    document.getElementById("map").style.boxShadow = "inset 1px 0px 0px 17px rgba(8,92,145,0.5)"
+    document.getElementById("map").style.padding = "10px"
     this.map.getContainer().style.cursor = "crosshair"
+    document.getElementById("new-marker-message").classList.remove("d-none")
+  }
+
+  disableAddMode() {
+    this.addMode = false
+    this.map.getContainer().style.cursor = ""
+    document.getElementById("map").style.padding = ""
+    document.getElementById("map").style.boxShadow = ""
+    document.getElementById("new-marker-message").classList.add("d-none")
   }
 
   debouncedLoad() {
@@ -159,18 +174,16 @@ export default class extends Controller {
   }
 
   handleMapClick(e) {
-    if (!this.addMode) return
     const { lat, lng } = e.latlng
 
     document.getElementById("latField").value = lat
     document.getElementById("lngField").value = lng
-
+    
     document.getElementById("latHidden").value = lat
     document.getElementById("lngHidden").value = lng
 
     this.modal.show()
 
-    // sair do modo automaticamente
     this.addMode = false
     this.map.getContainer().style.cursor = ""
   }

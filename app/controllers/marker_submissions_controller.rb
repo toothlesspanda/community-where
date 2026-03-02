@@ -18,7 +18,7 @@ class MarkerSubmissionsController < ApplicationController
   private
 
   def marker_submission_params
-    params.require(:marker_submission).permit(
+    permitted = params.require(:marker_submission).permit(
       :latitude,
       :longitude,
       :description,
@@ -28,5 +28,10 @@ class MarkerSubmissionsController < ApplicationController
       :new_parent_name,
       :new_child_name
     )
+
+    permitted[:category_id] = nil if permitted[:category_id].to_i == 0
+    permitted[:parent_category_id] = nil if permitted[:parent_category_id].to_i == 0
+
+    permitted
   end
 end

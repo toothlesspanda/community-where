@@ -1,0 +1,13 @@
+<span data-controller="new-marker">
+  <div class="modal fade" id="newMarker" data-new-marker-target="modal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <%= turbo_frame_tag "new-marker-modal" do %>
+            <%= render "new_marker_form" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</span>
