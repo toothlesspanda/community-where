@@ -24,6 +24,10 @@
   </head>
 
   <body>
+    <div id="flash" class="position-fixed top-0 start-50 translate-middle-x mt-3" style="z-index: 2000;">
+      <%= render "shared/flash" %>
+    </div>
+
     <%= yield %>
   </body>
 </html>

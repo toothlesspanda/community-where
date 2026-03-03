@@ -11,9 +11,9 @@ export default class extends Controller {
 
   async connect() {
     this.addMode = false
-    const coordinates = await this.setupLocation()
+    this.location_coordinates = await this.setupLocation()
 
-    this.setupMap(coordinates);
+    this.setupMap(this.location_coordinates);
 
     await this.loadMarkers()
 
@@ -21,14 +21,18 @@ export default class extends Controller {
     this.map.on("click", this.handleMapClick.bind(this))
 
     window.addEventListener("city:selected", this.handleCitySelected)
-    this.modal = new bootstrap.Modal(document.getElementById("newMarker"))
-    window.addEventListener("new-marker:closed", this.disableAddMode.bind(this))
+    this.modal = new bootstrap.Modal(document.getElementById("newMarkerModal"))
+    window.addEventListener("hidden.bs.modal", this.disableAddMode.bind(this))
   }
 
   disconnect() {
-    document.removeEventListener("keydown", this.handleKeydown.bind(this))
     window.removeEventListener("city:selected", this.handleCitySelected)
-    window.removeEventListener("new-marker:closed", this.disableAddMode.bind(this))
+    window.removeEventListener("hidden.bs.modal", this.disableAddMode.bind(this))
+  }
+
+
+  resetMapPosition(){
+    this.map.setView(this.location_coordinates)
   }
 
   async setupLocation(){
@@ -78,7 +82,7 @@ export default class extends Controller {
 
   enableAddMode() {
     this.addMode = true
-    document.getElementById("map").style.boxShadow = "inset 1px 0px 0px 17px rgba(8,92,145,0.5)"
+    document.getElementById("map").style.boxShadow = "inset 1px 0px 0px 17px rgba(220, 53, 69)"
     document.getElementById("map").style.padding = "10px"
     this.map.getContainer().style.cursor = "crosshair"
     document.getElementById("new-marker-message").classList.remove("d-none")
@@ -126,25 +130,41 @@ export default class extends Controller {
 
   addMarker(marker) {
     let categories = ""
+    const catGroupedby = Object.groupBy(marker.categories, cat => cat.parent);
 
-    marker.categories.forEach((cat, index) => {
-      categories+= `<span class="badge text-bg-primary ${index !== 0 ? "ms-2" : ""}"> ${cat.parent}: ${cat.code}</span>`
-    })
+    console.log(catGroupedby)
+    for(let [parentKey,cats] of Object.entries(catGroupedby)){
+      categories+= `<div> <span class="me-2">${parentKey}:</span>`
+
+      for(let category of cats){
+        categories+= `<span class="badge border border-2 border-primary text-primary">${category.code}</span>`
+      }
+      categories+= `</div>`
+    }
 
     L.marker(
         [marker.latitude, marker.longitude],
-        { icon: this.coloredIcon(marker.categories[0].color) })
+        { icon: this.coloredIcon(marker.categories[0].color) }
+          )
         .addTo(this.markersLayer)
         .bindPopup(`
-          <div>
-             <span class="fs-5">${marker.name}</span>
+          <div class="popup-content">
+             <span class="fs-5">${marker.name}</span><br>
               <p class="my-1 text-muted">${marker.description}</p>
+              <span class="fs-10"><button class="btn btn-link btn-mute p-0 fs-10 fs-12"> Google Maps link <i class="bi bi-copy"></i></button></span>
+              <div class="divider my-1"></div>
               <div class="my-3">
                   ${categories}
               </div>
           </div>
  
-        `)
+        `, {
+          className: "custom-popup"
+        }).on("popupopen", (e) => {
+          const popupEl = e.popup.getElement()
+          popupEl.style.setProperty("--popup-color", marker.categories[0].color)
+        }
+      )
   }
 
   coloredIcon(color) {
@@ -174,6 +194,7 @@ export default class extends Controller {
   }
 
   handleMapClick(e) {
+    if(this.addMode == false) return;
     const { lat, lng } = e.latlng
 
     document.getElementById("latField").value = lat

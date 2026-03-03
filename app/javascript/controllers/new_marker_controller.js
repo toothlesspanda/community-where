@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import * as bootstrap from "bootstrap"
 
 export default class extends Controller {
     static targets = [
@@ -12,13 +13,16 @@ export default class extends Controller {
 
     connect() {
         this.categories = JSON.parse(this.parentSelectTarget.dataset.categories)
-        this.originalContent = this.element.querySelector("#new-marker-content").innerHTML
-        this.modalTarget.addEventListener("hidden.bs.modal", this.handleModalClosed.bind(this))
     }
 
-    handleModalClosed() {
-        window.dispatchEvent(new CustomEvent("new-marker:closed"))
+    submitEnd(event) {
+        if (event.detail.success) {
+            const modal = bootstrap.Modal.getInstance(
+                this.element.closest(".modal")
+            )
 
+            modal.hide()
+        }
     }
 
     handleParentChange(event) {

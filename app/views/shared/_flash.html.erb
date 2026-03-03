@@ -1,0 +1,6 @@
+<% flash.each do |type, message| %>
+  <div data-bs-delay="3000" data-bs-autohide="true" class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+    <%= message %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+<% end %>

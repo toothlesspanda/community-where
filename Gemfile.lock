@@ -201,6 +201,8 @@ GEM
     raabro (1.4.0)
     racc (1.8.1)
     rack (3.2.5)
+    rack-attack (6.8.0)
+      rack (>= 1.0, < 4)
     rack-session (2.1.1)
       base64 (>= 0.1.0)
       rack (>= 3.0.0)
@@ -244,6 +246,7 @@ GEM
       erb
       psych (>= 4.0.0)
       tsort
+    recaptcha (5.21.1)
     regexp_parser (2.11.0)
     reline (0.6.3)
       io-console (~> 0.5)
@@ -364,7 +367,9 @@ DEPENDENCIES
   pg (~> 1.1)
   propshaft
   puma (>= 5.0)
+  rack-attack
   rails (~> 8.1.2)
+  recaptcha
   rgeo
   rgeo-activerecord
   rubocop-rails-omakase

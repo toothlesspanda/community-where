@@ -2,16 +2,29 @@ class MarkerSubmissionsController < ApplicationController
   def create
     @marker_submission = MarkerSubmission.new(marker_submission_params)
 
+    unless verify_recaptcha(model: @marker_submission)
+      flash.now[:alert] = "Verificação falhou. Tenta novamente."
+      render turbo_stream: turbo_stream.replace(
+        "new-marker-modal",
+        partial: "marker_submissions/new_marker_form",
+        locals: { marker_subsmission: @marker_submission }
+      )
+      return
+    end
+
     if @marker_submission.save
-      respond_to do |format|
-        format.html { redirect_to root_path, notice: "Marcador submetido para validação." }
-        format.turbo_stream
-      end
+      flash.now[:notice] = "Marcador submetido para avaliação!"
+
+      render turbo_stream: [
+        turbo_stream.update("flash", partial: "shared/flash"),
+        turbo_stream.replace("new-marker-modal", partial: "marker_submissions/new_marker_form", locals: { marker_subsmission: MarkerSubmission.new })
+      ]
     else
-      respond_to do |format|
-        format.html { redirect_to root_path, alert: @marker_submission.errors.full_messages.to_sentence }
-        format.turbo_stream
-      end
+      render turbo_stream: turbo_stream.replace(
+        "new-marker-modal",
+        partial: "marker_submissions/new_marker_form",
+        locals: { marker_subsmission: @marker_submission }
+      )
     end
   end
 

@@ -1,4 +1,8 @@
-<%= form_with model: MarkerSubmission.new do |f| %>
+<%= form_with model: MarkerSubmission.new,  data: {
+  controller: "new-marker",
+  action: "turbo:submit-end->new-marker#submitEnd"
+} do |f| %>
+  <%= render "shared/form_errors", object: @marker_submission %>
   <%= f.hidden_field :latitude, id: "latHidden" %>
   <%= f.hidden_field :longitude, id: "lngHidden" %>
 
@@ -68,5 +72,7 @@
     <%= f.text_field :new_child_name, class: "form-control" %>
   </div>
 
-  <%= f.submit "Submeter para validação", class: "btn btn-dark w-100" %>
+  <%= recaptcha_tags nonce: true %>
+
+  <%= f.submit "Submeter para validação", class: "btn btn-primary w-100" %>
 <% end %>
