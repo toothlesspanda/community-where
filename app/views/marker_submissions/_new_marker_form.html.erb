@@ -1,0 +1,78 @@
+<%= form_with model: MarkerSubmission.new,  data: {
+  controller: "new-marker",
+  action: "turbo:submit-end->new-marker#submitEnd"
+} do |f| %>
+  <%= render "shared/form_errors", object: @marker_submission %>
+  <%= f.hidden_field :latitude, id: "latHidden" %>
+  <%= f.hidden_field :longitude, id: "lngHidden" %>
+
+  <div class="form-group mb-3">
+    <%= f.label "Latitude", class: "text-muted" %>
+    <%= f.text_field :latitude, id: "latField", disabled: true, class: "form-control disabled" %>
+  </div>
+
+  <div class="form-group mb-3">
+    <%= f.label "longitude", class: "text-muted" %>
+    <%= f.text_field :longitude, id: "lngField", disabled: true, class: "form-control disabled" %>
+  </div>
+
+  <div class="form-group mb-3">
+    <%= f.label "Name", class: "text-muted" %>
+    <%= f.text_field :name, class: "form-control mb-3", required: true, placeholder: "Nome" %>
+  </div>
+
+  <div class="form-group mb-3">
+    <%= f.label "Description", class: "text-muted" %>
+    <%= f.text_field :description, class: "form-control mb-3", required: true, placeholder: "description" %>
+  </div>
+
+  <div class="form-group mb-3">
+    <%= f.label :parent_category_id, "Categoria", class: "text-muted" %>
+
+    <%= f.select :parent_category_id,
+                 options_for_select(
+                   @parent_categories.map { |c| [c.human_name, c.id] } + [%w[Outra… other]]
+                 ),
+                 { prompt: "Selecionar categoria" },
+                 class: "form-control",
+                 required: true,
+                 data: {
+                   action: "change->new-marker#handleParentChange",
+                   new_marker_target: "parentSelect",
+                   categories: @parent_categories.map { |p|
+                     {
+                       id: p.id,
+                       code: p.human_name,
+                       children: p.children.map { |c| { id: c.id, code: c.human_name } }
+                     }
+                   }.to_json
+                 } %>
+  </div>
+
+  <div class="form-group mb-3 d-none" data-new-marker-target="newParentWrapper">
+    <%= f.label :new_parent_name, "Nova categoria", class: "text-muted" %>
+    <%= f.text_field :new_parent_name, class: "form-control" %>
+  </div>
+
+  <div class="form-group mb-3 d-none" data-new-marker-target="childSelectWrapper">
+    <%= f.label :category_id, "Subcategoria", class: "text-muted" %>
+
+    <%= f.select :category_id,
+                 [],
+                 { prompt: "Selecionar subcategoria" },
+                 class: "form-control",
+                 data: {
+                   new_marker_target: "childSelect",
+                   action: "change->new-marker#handleChildChange"
+                 } %>
+  </div>
+
+  <div class="form-group mb-3 d-none" data-new-marker-target="newChildWrapper">
+    <%= f.label :new_child_name, "Subcategoria", class: "text-muted" %>
+    <%= f.text_field :new_child_name, class: "form-control" %>
+  </div>
+
+  <%= recaptcha_tags nonce: true %>
+
+  <%= f.submit "Submeter para validação", class: "btn btn-primary w-100" %>
+<% end %>

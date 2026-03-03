@@ -1,8 +1,21 @@
 // Entry point for your Sass build
-@import "leaflet.markercluster/dist/MarkerCluster.css";
+@import "variables";
 @import "bootstrap/scss/bootstrap";
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css");
-//@import "leafleft";
+@import "custom_popup";
+@import "leafleft";
+
+
+
+.side-panel {
+  @extend .rounded-4;
+  @extend .mt-4;
+  @extend .me-4;
+  background: #ffffff;
+  box-shadow: 2px 2px 7px 2px #00000035;
+  border: 3px solid #085c9140;
+}
+
 
 .map-dot{
   width:16px;
@@ -11,7 +24,6 @@
   border:2px solid white;
   margin-right: 16px;
   box-shadow:0 0 4px rgba(0,0,0,0.3);
-
 }
 
 .map-dot-cluster {
@@ -50,8 +62,83 @@
   pointer-events: auto;
 }
 
+.current_position {
+  @extend .bg-white;
+  @extend .rounded-4;
+  @extend .p-1;
+  @extend .opacity-50;
+  @extend .position-absolute;
+  @extend .bottom-0;
+  @extend .start-0;
+  @extend .z-3;
+  @extend .ms-2;
+  @extend .mb-2;
+  cursor: default;
+
+  &:hover {
+    @extend .opacity-100;
+    cursor: pointer;
+  }
+}
+
 
 /// BOOTSTRAP OVERRIDES
 .collapse {
   --bs-collapse-transition: height .1s ease;
+}
+
+.collapse {
+  transition: none !important;
+}
+
+.collapsing {
+  transition: none !important;
+  height: auto !important;
+}
+
+.btn, .card {
+  border: 3px solid #00000010 !important;
+}
+
+.input-group-text.common-border {
+  border: 3px solid #085c9140 ;
+  border-right: none;
+}
+
+input[type="search"].form-control {
+  border: 3px solid #085c9140;
+  border-left: none;
+}
+
+.btn-mute {
+  border: none !important;
+}
+
+.btn-link:hover {
+  background: #00000007;
+  box-shadow: inset 0px 0px 0px 3px #085c9130;
+}
+
+.input-group-text {
+  border-right: none !important;
+}
+
+.form-control:focus {
+  box-shadow: none;
+}
+
+.divider{
+  @extend .my-4;
+  background: #00000010;
+  width: 100%;
+  height: 1px;
+}
+
+.accordion-button:not(.collapsed) {
+ background: #085c9140;
+  border: 0;
+}
+
+.accordion-button:focus {
+  box-shadow: none;
 }

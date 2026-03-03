@@ -1,19 +1,32 @@
 <div>
 
-  <div data-controller="map" data-map-url-value="<%= markers_url %>" class="position-relative vh-100">
-    <div data-map-target="map" class="w-100 h-100 z-0"></div>
-
-    <div class="position-absolute d-inline top-0 end-0 p-3 z-2">
-        <%= render "home/search" %>
-
-      <div class="position-relative d-flex justify-content-end" >
-      <span class="d-none d-md-block w-auto" style="max-width: 350px;">
-        <%= render "home/filters" %>
-      </span>
+  <div id="map" data-controller="map" data-map-url-value="<%= markers_url %>" class="position-relative vh-100">
+    <div id="new-marker-message" class="position-absolute z-2 top-0 start-0 w-100 d-flex justify-content-center d-none">
+      <div class="btn btn-outline-danger btn-mute" data-action="click->map#disableAddMode">
+        Terminar adiçao de novo ponto
+        <i class="bi bi-x-lg"></i>
       </div>
     </div>
 
-    <span class="bg-white rounded-4 p-1 opacity-50 position-absolute bottom-0 start-0 z-3 ms-2 mb-2">
+    <div data-map-target="map" class="w-100 h-100 z-0"></div>
+    <div class="side-panel position-absolute d-inline top-0 end-0 p-3 z-2">
+      <div class="mx-2 rounded-4" style="background: #085c9140; color: #085c91">
+        <div class="fs-4 mb-2 px-2"> Community Where? </div>
+      </div>
+
+
+        <div class="divider"></div>
+        <%= render "home/search" %>
+
+      <div class="position-relative">
+        <span class="d-none d-md-block w-auto">
+          <%= render "home/filters" %>
+        </span>
+      </div>
+
+    </div>
+
+    <span class="current_position" data-action="click->map#resetMapPosition">
       <i class="bi bi-crosshair text-info"></i>
       <span class="text-muted">Your current location:
         <span id="current-location"></span>
@@ -23,3 +36,5 @@
   </div>
 
 </div>
+
+<%= render "marker_submissions/new_marker_modal" %>
