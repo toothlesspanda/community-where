@@ -153,16 +153,14 @@ export default class extends Controller {
           <div class="popup-content">
              <span class="fs-5">${marker.name}</span><br>
               <p class="my-1 text-muted">${marker.description}</p>
-              <span class="fs-10">
-                <button class="btn btn-link btn-mute p-0 fs-10 fs-12" data-action="click->map#copyToClipboard" 
-                  data-link="${googleLink}">
-                    Google Maps link <i class="bi bi-copy"></i>
-                </button>
-              </span>
               <div class="divider my-1"></div>
-              <div class="my-3">
+              <div class="my-2">
                   ${categories}
               </div>
+              <button class="btn btn-link btn-mute btn-sm p-0 mt-1" data-action="click->map#copyToClipboard"
+                data-link="${googleLink}">
+                  <i class="bi bi-geo-alt me-1"></i>Google Maps <i class="bi bi-copy ms-1"></i>
+              </button>
           </div>
         `, {
           className: "custom-popup"
