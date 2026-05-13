@@ -142,6 +142,8 @@ export default class extends Controller {
       categories+= `</div>`
     }
 
+    const googleLink = `https://www.google.com/maps/search/?api=1&query=${marker.latitude},${marker.longitude},z15`;
+
     L.marker(
         [marker.latitude, marker.longitude],
         { icon: this.coloredIcon(marker.categories[0].color) }
@@ -151,13 +153,17 @@ export default class extends Controller {
           <div class="popup-content">
              <span class="fs-5">${marker.name}</span><br>
               <p class="my-1 text-muted">${marker.description}</p>
-              <span class="fs-10"><button class="btn btn-link btn-mute p-0 fs-10 fs-12"> Google Maps link <i class="bi bi-copy"></i></button></span>
+              <span class="fs-10">
+                <button class="btn btn-link btn-mute p-0 fs-10 fs-12" data-action="click->map#copyToClipboard" 
+                  data-link="${googleLink}">
+                    Google Maps link <i class="bi bi-copy"></i>
+                </button>
+              </span>
               <div class="divider my-1"></div>
               <div class="my-3">
                   ${categories}
               </div>
           </div>
- 
         `, {
           className: "custom-popup"
         }).on("popupopen", (e) => {
@@ -165,6 +171,21 @@ export default class extends Controller {
           popupEl.style.setProperty("--popup-color", marker.categories[0].color)
         }
       )
+  }
+
+  copyToClipboard(event){
+    event.preventDefault();
+    const link = event.currentTarget.dataset.link;
+
+    navigator.clipboard.writeText(link).then(() => {
+      let tooltip = new bootstrap.Tooltip(event.currentTarget, {
+        title: "Copied!",
+        trigger: "manual"
+      });
+
+      tooltip.show();
+      setTimeout(() => tooltip.dispose(), 1500);
+    });
   }
 
   coloredIcon(color) {
