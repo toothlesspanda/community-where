@@ -1,79 +1,149 @@
-<div>
+<div class="d-flex vh-100" data-controller="map" data-map-url-value="<%= markers_url %>">
 
-  <div id="map" data-controller="map" data-map-url-value="<%= markers_url %>" class="position-relative vh-100">
-<!--    <nav class="navbar navbar-expand-lg bg-body-tertiary">-->
-<!--      <div class="container-fluid">-->
-<!--        <a class="navbar-brand" href="#">-->
-<!--          <div class="mx-2 rounded-4" style="background: #085c9140; color: #085c91">-->
-<!--            <div class="fs-4 mb-2 px-2"> Community Where? </div>-->
-<!--          </div>-->
-<!--        </a>-->
-
-<!--        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">-->
-<!--          <span class="navbar-toggler-icon"></span>-->
-<!--        </button>-->
-
-<!--        <div class="d-flex justify-content-end w-100">-->
-
-<!--          <div class="d-flex">-->
-<!--            <button type="button" class="btn btn-link btn-mute text-decoration-none text-muted d-flex flex-column" data-action="map#enableAddMode">-->
-<!--              <i class="bi bi-geo-alt fs-5"></i>-->
-<!--              <span> Novo Ponto </span>-->
-<!--            </button>-->
-<!--            <button type="button" class="btn btn-link btn-mute text-decoration-none text-muted d-flex flex-column">-->
-<!--              <i class="bi bi-chat-left-heart fs-5"></i>-->
-<!--              <span> Sugestões </span>-->
-<!--            </button>-->
-<!--          </div>-->
-<!--        </div>-->
-
-<!--        <div class="collapse navbar-collapse" id="navbarNav">-->
-<!--          <ul class="navbar-nav">-->
-<!--            <li class="nav-item">-->
-<!--              <a class="nav-link active" aria-current="page" href="#">Home</a>-->
-<!--            </li>-->
-<!--            <li class="nav-item">-->
-<!--              <a class="nav-link" href="#">Features</a>-->
-<!--            </li>-->
-<!--            <li class="nav-item">-->
-<!--              <a class="nav-link" href="#">Pricing</a>-->
-<!--            </li>-->
-<!--            <li class="nav-item">-->
-<!--              <a class="nav-link disabled" aria-disabled="true">Disabled</a>-->
-<!--            </li>-->
-<!--          </ul>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </nav>-->
-
-    <div id="new-marker-message" class="position-absolute z-2 top-0 start-0 w-100 d-flex justify-content-center d-none">
-      <div class="btn btn-outline-danger btn-mute" data-action="click->map#disableAddMode">
-        Terminar adiçao de novo ponto
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header d-flex align-items-center justify-content-between p-3 pb-0">
+      <span class="fs-4 fw-semibold"><%= t('app_name') %></span>
+      <button type="button" class="btn btn-sm btn-mute p-1" data-action="click->map#toggleSidebar">
         <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="sidebar-body p-3 pt-2">
+      <% unless cookies[:welcome_dismissed] %>
+        <div class="alert alert-primary bg-primary bg-opacity-10 border-0 small mb-3" id="welcome-banner">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <strong><%= t('welcome.title') %></strong>
+              <p class="mb-0 mt-1 text-muted"><%= t('welcome.description') %></p>
+            </div>
+            <button type="button" class="btn-close btn-close-sm ms-2" data-action="click->map#dismissWelcome"></button>
+          </div>
+        </div>
+      <% end %>
+
+      <%= render "home/search_sidebar" %>
+
+      <div class="d-flex gap-2 mb-2">
+        <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 d-flex align-items-center gap-1"
+                data-bs-toggle="modal" data-bs-target="#filtersModal">
+          <i class="bi bi-funnel"></i> <%= t('filters.title') %>
+          <span class="badge bg-primary rounded-pill d-none" id="filter-count"></span>
+        </button>
+
+        <button type="button" class="btn btn-primary btn-sm btn-mute bg-primary bg-opacity-10 text-primary border-0 rounded-pill px-3 d-flex align-items-center gap-1"
+                data-action="map#enableAddMode">
+          <i class="bi bi-plus-lg"></i> <%= t('markers.new_point') %>
+        </button>
+      </div>
+
+      <div id="active-filters" class="d-flex flex-wrap gap-1 mb-2"></div>
+
+      <div class="d-flex align-items-center gap-1 mb-1">
+        <span class="text-muted small fw-semibold"><%= t('list.title') %></span>
+        <span class="badge bg-secondary bg-opacity-25 text-muted rounded-pill small" id="list-count">0</span>
+      </div>
+
+      <div class="sidebar-scroll-area">
+        <div id="markers-list" class="d-flex flex-column gap-1"></div>
+        <p class="text-muted small text-center mt-2 d-none" id="list-empty"><%= t('list.empty') %></p>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="divider"></div>
+        <div class="d-flex align-items-center justify-content-between">
+          <button type="button" class="btn btn-sm btn-mute text-muted d-flex align-items-center gap-1 p-0"
+                  data-bs-toggle="modal" data-bs-target="#aboutModal">
+            <i class="bi bi-info-circle"></i>
+            <span class="small d-none d-sm-inline"><%= t('about.link') %></span>
+          </button>
+
+          <button type="button" class="btn btn-sm btn-mute text-muted d-flex align-items-center gap-1 p-0"
+                  data-bs-toggle="modal" data-bs-target="#suggestionModal">
+            <i class="bi bi-chat-left-heart"></i>
+            <span class="small d-none d-sm-inline"><%= t('markers.suggestions') %></span>
+          </button>
+
+          <% other_locale = I18n.locale == :pt ? :en : :pt %>
+          <%= button_to locale_path(locale: other_locale),
+                method: :patch,
+                class: "btn btn-sm btn-light btn-mute opacity-50 rounded-pill px-2" do %>
+            <span class="<%= 'fw-bold' if I18n.locale == :pt %>">PT</span>
+            <span class="text-muted">|</span>
+            <span class="<%= 'fw-bold' if I18n.locale == :en %>">EN</span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div id="sidebar-backdrop" class="sidebar-backdrop d-none" data-action="click->map#toggleSidebar"></div>
+
+  <%# ── Map ── %>
+  <div id="map" class="flex-grow-1 position-relative">
+    <button class="btn btn-light btn-sm position-absolute top-0 start-0 m-2 shadow-sm map-overlay-element"
+            id="sidebar-toggle" type="button" data-action="click->map#toggleSidebar">
+      <i class="bi bi-list fs-5"></i>
+    </button>
+
+    <div id="new-marker-message" class="position-absolute top-0 start-0 w-100 d-flex justify-content-center d-none mt-3 map-overlay-element">
+      <div class="add-mode-banner d-flex align-items-center gap-2 px-3 py-2">
+        <span class="recording-dot"></span>
+        <span class="fw-semibold"><%= t('markers.stop_adding') %></span>
+        <button class="btn btn-sm btn-mute p-0 ms-1" data-action="click->map#disableAddMode">
+          <i class="bi bi-x-lg"></i>
+        </button>
       </div>
     </div>
 
-    <div data-map-target="map" class="w-100 h-100 z-0"></div>
-    <div class="side-panel position-absolute d-inline top-0 end-0 p-3 z-2">
-      <%= render "home/search" %>
-
-      <div class="position-relative">
-        <span class="d-none d-md-block w-auto">
-          <%= render "home/filters" %>
-        </span>
-      </div>
-
-    </div>
-
-    <span class="current_position" data-action="click->map#resetMapPosition">
-      <i class="bi bi-crosshair text-info"></i>
-      <span class="text-muted">Your current location:
-        <span id="current-location"></span>
-      </span>
-    </span>
-
+    <div data-map-target="map" class="w-100 h-100 position-relative" style="z-index: 0;"></div>
   </div>
 
 </div>
 
+<%# ── Filters Modal ── %>
+<div class="modal fade" id="filtersModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <h5 class="modal-title fw-semibold"><%= t('filters.title') %></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <%= render "home/filters" %>
+      </div>
+      <div class="modal-footer border-0 d-flex justify-content-between">
+        <button type="button" class="btn btn-sm btn-link text-muted text-decoration-none d-none" id="clear-filters"
+                data-action="click->map#clearFilters">
+          <i class="bi bi-x-circle me-1"></i><%= t('filters.clear') %>
+        </button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><%= t('filters.apply') %></button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <%= render "marker_submissions/new_marker_modal" %>
+<%= render "suggestions/modal" %>
+
+<div class="modal fade" id="aboutModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <h5 class="modal-title fw-semibold"><%= t('app_name') %></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p><%= t('about.intro') %></p>
+
+        <h6 class="fw-semibold mt-3"><%= t('about.what_can_you_do') %></h6>
+        <ul class="list-unstyled">
+          <li class="mb-2"><i class="bi bi-search text-primary me-2"></i><%= t('about.action_search') %></li>
+          <li class="mb-2"><i class="bi bi-geo-alt text-primary me-2"></i><%= t('about.action_add') %></li>
+          <li class="mb-2"><i class="bi bi-funnel text-primary me-2"></i><%= t('about.action_filter') %></li>
+        </ul>
+
+        <p class="text-muted small mt-3"><%= t('about.community_note') %></p>
+      </div>
+    </div>
+  </div>
+</div>

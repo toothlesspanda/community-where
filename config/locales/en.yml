@@ -1,31 +1,63 @@
-# Files in the config/locales directory are used for internationalization and
-# are automatically loaded by Rails. If you want to use locales other than
-# English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more about the API, please read the Rails Internationalization guide
-# at https://guides.rubyonrails.org/i18n.html.
-#
-# Be aware that YAML interprets the following case-insensitive strings as
-# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
-# must be quoted to be interpreted as strings. For example:
-#
-#     en:
-#       "yes": yup
-#       enabled: "ON"
-
 en:
-  hello: "Hello world"
+  app_name: "Community Where"
+
+  search:
+    placeholder: "Search location..."
+
+  filters:
+    title: "Filters"
+    clear: "Clear filters"
+    apply: "Apply"
+
+  list:
+    title: "List"
+    empty: "No points visible in this area."
+
+  markers:
+    new_point: "New Point"
+    suggestions: "Suggestions"
+    stop_adding: "Click on the map to add a point"
+    current_location: "Your current location:"
+
+  marker_submissions:
+    form:
+      address: "Address"
+      latitude: "Latitude"
+      longitude: "Longitude"
+      name: "Name"
+      name_placeholder: "Name"
+      description: "Description"
+      description_placeholder: "Description"
+      name_placeholder_en: "Name in English"
+      description_placeholder_en: "Description in English"
+      optional: "(optional)"
+      category: "Category"
+      select_category: "Select category"
+      other_category: "Other…"
+      subcategory: "Subcategory"
+      select_subcategory: "Select subcategory"
+      new_category: "New category"
+      submit: "Submit for validation"
+
+  welcome:
+    title: "Don't know where to dispose of glass, batteries, oil or used clothes?"
+    description: "Find the nearest drop-off point — or add a new one to help your community."
+
+  about:
+    link: "About"
+    intro: "Community Where is a volunteer-driven, non-profit platform that helps you find collection points and community resources near you — from recycling to donations, electric charging and much more."
+    what_can_you_do: "What can you do?"
+    action_search: "Search locations and find points near you"
+    action_add: "Add new points for your community"
+    action_filter: "Filter by category — glass, clothes, electronics, donations…"
+    community_note: "All points are suggested by the community and validated before being published."
+
+  suggestions:
+    title: "Suggestions"
+    description: "Have an idea, found an error or want to suggest something? Leave your message here."
+    placeholder: "Write your suggestion here..."
+    submit: "Send suggestion"
+    success: "Suggestion sent successfully! Thank you."
+
+  errors:
+    form_errors_title: "Please fix the following errors:"

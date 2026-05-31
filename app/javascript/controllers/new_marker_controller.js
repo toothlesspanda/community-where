@@ -12,7 +12,9 @@ export default class extends Controller {
     ]
 
     connect() {
-        this.categories = JSON.parse(this.parentSelectTarget.dataset.categories)
+        if (this.hasParentSelectTarget) {
+            this.categories = JSON.parse(this.parentSelectTarget.dataset.categories)
+        }
     }
 
     submitEnd(event) {
@@ -44,7 +46,7 @@ export default class extends Controller {
         const parent = this.categories.find(cat => cat.id === parentId)
 
         this.childSelectTarget.innerHTML =
-            '<option value="">Selecionar subcategoria</option>'
+            `<option value="">${this.childSelectTarget.dataset.prompt}</option>`
 
         if (!parent) return
 
@@ -58,7 +60,7 @@ export default class extends Controller {
 
         const otherOption = document.createElement("option")
         otherOption.value = "other"
-        otherOption.textContent = "Outra…"
+        otherOption.textContent = this.childSelectTarget.dataset.other
         this.childSelectTarget.appendChild(otherOption)
     }
 

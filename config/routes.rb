@@ -4,8 +4,12 @@ Rails.application.routes.draw do
   root "home#index"
 
   resources :markers
-  resources :places
-  get "places/autocomplete"
+  resources :places do
+    get "autocomplete", on: :collection
+  end
 
   resources :marker_submissions, only: [:create]
+  resources :suggestions, only: [:create]
+
+  patch "locale", to: "locale#update", as: :locale
 end

@@ -1,6 +1,10 @@
 class Place < ApplicationRecord
+  extend Mobility
+
   belongs_to :parent, class_name: "Place", optional: true
   has_many :children, class_name: "Place", foreign_key: :parent_id
+
+  translates :name, column_suffix: "_translations", column_fallback: true
 
   def formatted_name(place)
     names = []

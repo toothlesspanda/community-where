@@ -43,3 +43,5 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+gem "mobility", "~> 1.3"

@@ -1,0 +1,14 @@
+<div data-controller="search" class="mb-2">
+  <div class="input-group">
+    <span class="input-group-text bg-white border-end-0" style="color: #adadad">
+      <i class="bi bi-search"></i>
+    </span>
+    <input class="form-control border-start-0 ps-0" type="search"
+           placeholder="<%= t('search.placeholder') %>"
+           aria-label="Search"
+           data-search-target="input"
+           data-action="input->search#search" />
+  </div>
+  <div style="max-height: 300px;" data-search-target="suggestions"
+       class="card d-none mt-1 overflow-auto p-2 position-relative"></div>
+</div>

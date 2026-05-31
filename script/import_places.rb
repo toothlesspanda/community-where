@@ -34,18 +34,23 @@ data["features"].each_with_index do |feature, index|
 
   centroid_wkt = result.first["centroid"]
 
-  district = Place.find_or_create_by!(name: district_name, parent_id: nil)
+  district = Place.find_or_create_by!(name: district_name, parent_id: nil).tap do |p|
+    p.update!(name_translations: { pt: district_name }) if p.name_translations.blank?
+  end
 
   municipality = Place.find_or_create_by!(
     name: municipality_name,
     parent: district
-  )
+  ).tap do |p|
+    p.update!(name_translations: { pt: municipality_name }) if p.name_translations.blank?
+  end
 
   Place.find_or_create_by!(
     name: parish_name,
     parent: municipality
   ) do |place|
     place.coordinates = centroid_wkt
+    place.name_translations = { pt: parish_name }
   end
 
   puts "Imported #{parish_name}" if index % 100 == 0

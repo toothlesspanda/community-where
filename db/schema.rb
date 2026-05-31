@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_28_230421) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_31_083606) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -18,6 +18,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_28_230421) do
 
   create_table "categories", force: :cascade do |t|
     t.string "code", null: false
+    t.jsonb "code_translations", default: {}
     t.datetime "created_at", null: false
     t.string "hex_color"
     t.bigint "parent_id"
@@ -27,12 +28,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_28_230421) do
   end
 
   create_table "marker_submissions", force: :cascade do |t|
+    t.string "address"
     t.bigint "category_id"
     t.datetime "created_at", null: false
     t.string "description", null: false
+    t.string "description_en"
     t.decimal "latitude", precision: 10, scale: 6, null: false
     t.decimal "longitude", precision: 10, scale: 6, null: false
     t.string "name", null: false
+    t.string "name_en"
     t.string "new_child_name"
     t.string "new_parent_name"
     t.bigint "parent_category_id"
@@ -43,12 +47,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_28_230421) do
   end
 
   create_table "markers", force: :cascade do |t|
+    t.string "address"
     t.geography "coordinates", limit: {:srid=>4326, :type=>"st_point", :geographic=>true}
     t.datetime "created_at", null: false
     t.text "description"
+    t.jsonb "description_translations", default: {}
     t.float "latitude", null: false
     t.float "longitude", null: false
     t.string "name"
+    t.jsonb "name_translations", default: {}
     t.datetime "updated_at", null: false
     t.index ["coordinates"], name: "index_markers_on_coordinates", using: :gist
   end
@@ -67,11 +74,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_28_230421) do
     t.geography "coordinates", limit: {:srid=>4326, :type=>"st_point", :geographic=>true}
     t.datetime "created_at", null: false
     t.string "name", null: false
+    t.jsonb "name_translations", default: {}
     t.bigint "parent_id"
     t.datetime "updated_at", null: false
     t.index ["coordinates"], name: "index_places_on_coordinates", using: :gist
     t.index ["name"], name: "index_places_on_name", opclass: :gin_trgm_ops, using: :gin
     t.index ["parent_id"], name: "index_places_on_parent_id"
+  end
+
+  create_table "suggestions", force: :cascade do |t|
+    t.text "body", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   add_foreign_key "categories", "categories", column: "parent_id"
