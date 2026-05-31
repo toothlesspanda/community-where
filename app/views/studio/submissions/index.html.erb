@@ -1,0 +1,58 @@
+<h3 class="fw-semibold mb-4">Submissions <span class="text-muted fw-normal">(<%= @total %>)</span></h3>
+
+<div class="table-responsive">
+  <table class="table table-hover align-middle">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Location</th>
+        <th>Proposal</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @submissions.each do |s| %>
+        <tr class="cursor-pointer" onclick="window.location='<%= studio_submission_path(s) %>'">
+          <td class="text-muted"><%= s.id %></td>
+          <td class="fw-semibold"><%= s.name %></td>
+          <td>
+            <% if s.category %>
+              <span class="badge bg-secondary bg-opacity-10 text-dark"><%= s.category.code %></span>
+            <% elsif s.new_child_name.present? %>
+              <span class="badge bg-warning bg-opacity-10 text-dark">new: <%= s.new_child_name %></span>
+            <% else %>
+              <span class="text-muted">—</span>
+            <% end %>
+          </td>
+          <td class="text-muted small"><%= s.latitude.round(4) %>, <%= s.longitude.round(4) %></td>
+          <td>
+            <% if s.proposal %>
+              <a href="<%= studio_proposal_path(s.proposal) %>" onclick="event.stopPropagation();">
+                <span class="badge bg-<%= { 'pending' => 'warning', 'approved' => 'success', 'rejected' => 'danger', 'applied' => 'primary' }[s.proposal.status] %>">
+                  <%= s.proposal.status %>
+                </span>
+              </a>
+            <% else %>
+              <span class="text-muted">—</span>
+            <% end %>
+          </td>
+          <td class="text-muted small"><%= s.created_at.strftime("%d/%m/%Y %H:%M") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<% if @total_pages > 1 %>
+  <nav>
+    <ul class="pagination pagination-sm justify-content-center">
+      <% (1..@total_pages).each do |p| %>
+        <li class="page-item <%= 'active' if p == @page %>">
+          <a class="page-link" href="<%= studio_submissions_path(page: p) %>"><%= p %></a>
+        </li>
+      <% end %>
+    </ul>
+  </nav>
+<% end %>

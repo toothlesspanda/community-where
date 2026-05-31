@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_31_083606) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_31_190303) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -82,6 +82,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_31_083606) do
     t.index ["parent_id"], name: "index_places_on_parent_id"
   end
 
+  create_table "proposals", force: :cascade do |t|
+    t.string "action", null: false
+    t.float "confidence"
+    t.datetime "created_at", null: false
+    t.bigint "marker_submission_id", null: false
+    t.jsonb "proposed_data", default: {}, null: false
+    t.text "reviewer_notes"
+    t.string "status", default: "pending", null: false
+    t.datetime "updated_at", null: false
+    t.index ["marker_submission_id"], name: "index_proposals_on_marker_submission_id"
+    t.index ["status"], name: "index_proposals_on_status"
+  end
+
   create_table "suggestions", force: :cascade do |t|
     t.text "body", null: false
     t.datetime "created_at", null: false
@@ -94,4 +107,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_31_083606) do
   add_foreign_key "markers_categories", "categories"
   add_foreign_key "markers_categories", "markers"
   add_foreign_key "places", "places", column: "parent_id"
+  add_foreign_key "proposals", "marker_submissions"
 end

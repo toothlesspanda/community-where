@@ -54,3 +54,64 @@ animals = create_category("animals")
 %w[futsal_field volleyball_field skate_park].each { |c| create_category(c, parent: sports) }
 %w[kids moms food toys].each { |c| create_category(c, parent: donations) }
 %w[canil gatil shelter hospital parks].each { |c| create_category(c, parent: animals) }
+
+# Marker submissions for testing (near existing markers)
+glass = Category.find_by(code: "glass")
+plastic = Category.find_by(code: "plastic")
+oils = Category.find_by(code: "oils")
+electronics = Category.find_by(code: "electronics")
+electric_charge = Category.find_by(code: "electric_charge")
+
+submissions = [
+  {
+    name: "ecoponto vidro av liberdade",
+    description: "ecoponto de vidro na avenida da liberdade, junto ao quiosque",
+    latitude: 38.7180, longitude: -9.1420,
+    address: "Av. da Liberdade, Lisboa",
+    category: glass
+  },
+  {
+    name: "Ponto de recolha de óleo usado",
+    description: "Contentor para depositar oleo alimentar usado, no mercado de campo de ourique",
+    latitude: 38.7170, longitude: -9.1600,
+    address: "Mercado de Campo de Ourique, Lisboa",
+    category: oils
+  },
+  {
+    name: "Point 1",
+    description: "banco alimentar proximo da praça do comercio",
+    latitude: 38.7170, longitude: -9.1392,
+    address: "Praça do Comércio, Lisboa",
+    category: Category.find_by(code: "food")
+  },
+  {
+    name: "carregador eletrico rossio",
+    description: "posto de carregamento para veiculos eletricos junto à praça do rossio",
+    latitude: 38.7139, longitude: -9.1395,
+    address: "Praça do Rossio, Lisboa",
+    category: electric_charge
+  },
+  {
+    name: "Contentor plastico e electronica",
+    description: "ponto de recolha de plastico e pequenos electrodomesticos junto ao centro comercial",
+    latitude: 38.7300, longitude: -9.1500,
+    address: "Centro Comercial, Lisboa",
+    category: plastic,
+    new_parent_name: nil, new_child_name: nil
+  }
+]
+
+submissions.each do |s|
+  MarkerSubmission.find_or_create_by!(name: s[:name]) do |ms|
+    ms.description = s[:description]
+    ms.latitude = s[:latitude]
+    ms.longitude = s[:longitude]
+    ms.address = s[:address]
+    ms.category = s[:category]
+    ms.parent_category = s[:category]&.parent
+    ms.new_parent_name = s[:new_parent_name]
+    ms.new_child_name = s[:new_child_name]
+  end
+end
+
+puts "Created #{MarkerSubmission.count} marker submissions"
