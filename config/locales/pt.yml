@@ -1,0 +1,63 @@
+pt:
+  app_name: "Community Where"
+
+  search:
+    placeholder: "Pesquisar localização..."
+
+  filters:
+    title: "Filtros"
+    clear: "Limpar filtros"
+    apply: "Aplicar"
+
+  list:
+    title: "Lista"
+    empty: "Nenhum ponto visível nesta área."
+
+  markers:
+    new_point: "Novo Ponto"
+    suggestions: "Sugestões"
+    stop_adding: "Clica no mapa para adicionar ponto"
+    current_location: "A tua localização atual:"
+
+  marker_submissions:
+    form:
+      address: "Morada"
+      latitude: "Latitude"
+      longitude: "Longitude"
+      name: "Nome"
+      name_placeholder: "Nome"
+      description: "Descrição"
+      description_placeholder: "Descrição"
+      name_placeholder_en: "Name in English"
+      description_placeholder_en: "Description in English"
+      optional: "(opcional)"
+      category: "Categoria"
+      select_category: "Selecionar categoria"
+      other_category: "Outra…"
+      subcategory: "Subcategoria"
+      select_subcategory: "Selecionar subcategoria"
+      new_category: "Nova categoria"
+      submit: "Submeter para validação"
+
+  welcome:
+    title: "Não sabes onde colocar vidro, pilhas, óleo ou roupa usada?"
+    description: "Encontra o ponto mais perto de ti — ou adiciona um novo para ajudar a tua comunidade."
+
+  about:
+    link: "Sobre"
+    intro: "O Community Where é uma plataforma voluntária e sem fins lucrativos que te ajuda a encontrar pontos de recolha e recursos comunitários perto de ti — desde reciclagem a doações, carregamentos elétricos e muito mais."
+    what_can_you_do: "O que podes fazer?"
+    action_search: "Pesquisar localizações e encontrar pontos perto de ti"
+    action_add: "Adicionar novos pontos para a tua comunidade"
+    action_filter: "Filtrar por categoria — vidro, roupa, eletrónica, doações…"
+    community_note: "Todos os pontos são sugeridos pela comunidade e validados antes de serem publicados."
+
+  suggestions:
+    title: "Sugestões"
+    description: "Tens uma ideia, encontraste um erro ou queres sugerir algo? Deixa aqui a tua mensagem."
+    placeholder: "Escreve aqui a tua sugestão..."
+    submit: "Enviar sugestão"
+    success: "Sugestão enviada com sucesso! Obrigado."
+
+  errors:
+    form_errors_title: "Por favor corrige os seguintes erros:"

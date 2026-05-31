@@ -7,14 +7,78 @@
 
 
 
-.side-panel {
-  @extend .rounded-4;
-  @extend .mt-5;
-  @extend .me-4;
+.sidebar {
+  width: 340px;
+  min-width: 340px;
   background: #ffffff;
-  box-shadow: 2px 2px 7px 2px #00000035;
-  border: 3px solid #085c9140;
+  border-right: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
 }
+
+.sidebar.closed {
+  display: none;
+}
+
+.sidebar-body {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.sidebar-scroll-area {
+  flex: 1 1 0;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.sidebar-footer {
+  flex-shrink: 0;
+}
+
+// Hide hamburger when sidebar is open
+.sidebar:not(.closed) ~ #map #sidebar-toggle {
+  display: none !important;
+}
+
+// Desktop: backdrop hidden, no layout impact
+.sidebar-backdrop {
+  display: none;
+}
+
+@media (max-width: 575.98px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 85%;
+    min-width: 0;
+    height: 100vh;
+    z-index: 1045;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .sidebar.closed {
+    display: none;
+  }
+
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1044;
+  }
+
+  .sidebar-backdrop.d-none {
+    display: none !important;
+  }
+}
+
 
 
 .map-dot{
@@ -42,17 +106,57 @@
   font-size: 14px;
 }
 
-.search-container {
-  max-width: 50%;
-  height: fit-content;
+// Overlay elements on top of leaflet map (z-index 200+ internally)
+.map-overlay-element {
+  z-index: 1000;
+  position: absolute;
 }
 
-@media (min-width: 768px) {
-  .search-container {
-    max-width: 50%;
-  }
+// Filter chips: toggle style when checkbox is checked
+.btn-check:checked + .btn-outline-secondary {
+  background-color: var(--bs-primary);
+  border-color: var(--bs-primary);
+  color: white;
 }
 
+// Add mode (recording state)
+.add-mode {
+  box-shadow: inset 0 0 0 4px rgba(220, 53, 69, 0.6);
+  animation: add-mode-pulse 2s ease-in-out infinite;
+}
+
+@keyframes add-mode-pulse {
+  0%, 100% { box-shadow: inset 0 0 0 4px rgba(220, 53, 69, 0.4); }
+  50%      { box-shadow: inset 0 0 0 6px rgba(220, 53, 69, 0.7); }
+}
+
+.add-mode-banner {
+  background: rgba(220, 53, 69, 0.9);
+  color: white;
+  border-radius: 2rem;
+  font-size: 0.875rem;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.add-mode-banner .btn {
+  color: white;
+  opacity: 0.8;
+  &:hover { opacity: 1; }
+}
+
+.recording-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: white;
+  animation: recording-blink 1.2s ease-in-out infinite;
+}
+
+@keyframes recording-blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.3; }
+}
 
 .map-overlay {
   pointer-events: none;
@@ -62,53 +166,13 @@
   pointer-events: auto;
 }
 
-.current_position {
-  @extend .bg-white;
-  @extend .rounded-4;
-  @extend .p-1;
-  @extend .opacity-50;
-  @extend .position-absolute;
-  @extend .bottom-0;
-  @extend .start-0;
-  @extend .z-3;
-  @extend .ms-2;
-  @extend .mb-2;
-  cursor: default;
-
-  &:hover {
-    @extend .opacity-100;
-    cursor: pointer;
-  }
-}
 
 
 /// BOOTSTRAP OVERRIDES
-.collapse {
-  --bs-collapse-transition: height .1s ease;
-}
-
-.collapse {
-  transition: none !important;
-}
-
-.collapsing {
-  transition: none !important;
-  height: auto !important;
-}
-
 .btn, .card {
   border: 3px solid #00000010 !important;
 }
 
-.input-group-text.common-border {
-  border: 3px solid #085c9140 ;
-  border-right: none;
-}
-
-input[type="search"].form-control {
-  border: 3px solid #085c9140;
-  border-left: none;
-}
 
 .btn-mute {
   border: none !important;
@@ -134,11 +198,3 @@ input[type="search"].form-control {
   height: 1px;
 }
 
-.accordion-button:not(.collapsed) {
- background: #085c9140;
-  border: 0;
-}
-
-.accordion-button:focus {
-  box-shadow: none;
-}

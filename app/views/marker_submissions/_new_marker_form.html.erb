@@ -5,35 +5,72 @@
   <%= render "shared/form_errors", object: @marker_submission %>
   <%= f.hidden_field :latitude, id: "latHidden" %>
   <%= f.hidden_field :longitude, id: "lngHidden" %>
+  <%= f.hidden_field :address, id: "addressHidden" %>
 
   <div class="form-group mb-3">
-    <%= f.label "Latitude", class: "text-muted" %>
-    <%= f.text_field :latitude, id: "latField", disabled: true, class: "form-control disabled" %>
+    <%= f.label :address, t('marker_submissions.form.address'), class: "text-muted" %>
+    <div class="input-group">
+      <span class="input-group-text bg-white"><i class="bi bi-geo-alt"></i></span>
+      <%= f.text_field :address, id: "addressField", disabled: true, class: "form-control disabled" %>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-6">
+      <%= f.label "Latitude", t('marker_submissions.form.latitude'), class: "text-muted" %>
+      <%= f.text_field :latitude, id: "latField", disabled: true, class: "form-control disabled" %>
+    </div>
+    <div class="col-6">
+      <%= f.label "longitude", t('marker_submissions.form.longitude'), class: "text-muted" %>
+      <%= f.text_field :longitude, id: "lngField", disabled: true, class: "form-control disabled" %>
+    </div>
+  </div>
+
+  <ul class="nav nav-tabs nav-fill mb-3" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-pt" type="button" role="tab">
+        PT <span class="text-danger">*</span>
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-en" type="button" role="tab">
+        EN <span class="text-muted fw-normal" style="font-size: 0.75rem;"><%= t('marker_submissions.form.optional') %></span>
+      </button>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+    <div class="tab-pane fade show active" id="tab-pt" role="tabpanel">
+      <div class="form-group mb-3">
+        <%= f.label :name, t('marker_submissions.form.name'), class: "text-muted" %>
+        <%= f.text_field :name, class: "form-control", required: true, placeholder: t('marker_submissions.form.name_placeholder') %>
+      </div>
+      <div class="form-group mb-3">
+        <%= f.label :description, t('marker_submissions.form.description'), class: "text-muted" %>
+        <%= f.text_area :description, class: "form-control", required: true, rows: 3, placeholder: t('marker_submissions.form.description_placeholder') %>
+      </div>
+    </div>
+
+    <div class="tab-pane fade" id="tab-en" role="tabpanel">
+      <div class="form-group mb-3">
+        <%= f.label :name_en, t('marker_submissions.form.name'), class: "text-muted" %>
+        <%= f.text_field :name_en, class: "form-control", placeholder: t('marker_submissions.form.name_placeholder_en') %>
+      </div>
+      <div class="form-group mb-3">
+        <%= f.label :description_en, t('marker_submissions.form.description'), class: "text-muted" %>
+        <%= f.text_area :description_en, class: "form-control", rows: 3, placeholder: t('marker_submissions.form.description_placeholder_en') %>
+      </div>
+    </div>
   </div>
 
   <div class="form-group mb-3">
-    <%= f.label "longitude", class: "text-muted" %>
-    <%= f.text_field :longitude, id: "lngField", disabled: true, class: "form-control disabled" %>
-  </div>
-
-  <div class="form-group mb-3">
-    <%= f.label "Name", class: "text-muted" %>
-    <%= f.text_field :name, class: "form-control mb-3", required: true, placeholder: "Nome" %>
-  </div>
-
-  <div class="form-group mb-3">
-    <%= f.label "Description", class: "text-muted" %>
-    <%= f.text_field :description, class: "form-control mb-3", required: true, placeholder: "description" %>
-  </div>
-
-  <div class="form-group mb-3">
-    <%= f.label :parent_category_id, "Categoria", class: "text-muted" %>
+    <%= f.label :parent_category_id, t('marker_submissions.form.category'), class: "text-muted" %>
 
     <%= f.select :parent_category_id,
                  options_for_select(
-                   @parent_categories.map { |c| [c.human_name, c.id] } + [%w[Outra… other]]
+                   @parent_categories.map { |c| [c.human_name, c.id] } + [[t('marker_submissions.form.other_category'), 'other']]
                  ),
-                 { prompt: "Selecionar categoria" },
+                 { prompt: t('marker_submissions.form.select_category') },
                  class: "form-control",
                  required: true,
                  data: {
@@ -50,29 +87,31 @@
   </div>
 
   <div class="form-group mb-3 d-none" data-new-marker-target="newParentWrapper">
-    <%= f.label :new_parent_name, "Nova categoria", class: "text-muted" %>
+    <%= f.label :new_parent_name, t('marker_submissions.form.new_category'), class: "text-muted" %>
     <%= f.text_field :new_parent_name, class: "form-control" %>
   </div>
 
   <div class="form-group mb-3 d-none" data-new-marker-target="childSelectWrapper">
-    <%= f.label :category_id, "Subcategoria", class: "text-muted" %>
+    <%= f.label :category_id, t('marker_submissions.form.subcategory'), class: "text-muted" %>
 
     <%= f.select :category_id,
                  [],
-                 { prompt: "Selecionar subcategoria" },
+                 { prompt: t('marker_submissions.form.select_subcategory') },
                  class: "form-control",
                  data: {
                    new_marker_target: "childSelect",
-                   action: "change->new-marker#handleChildChange"
+                   action: "change->new-marker#handleChildChange",
+                   prompt: t('marker_submissions.form.select_subcategory'),
+                   other: t('marker_submissions.form.other_category')
                  } %>
   </div>
 
   <div class="form-group mb-3 d-none" data-new-marker-target="newChildWrapper">
-    <%= f.label :new_child_name, "Subcategoria", class: "text-muted" %>
+    <%= f.label :new_child_name, t('marker_submissions.form.subcategory'), class: "text-muted" %>
     <%= f.text_field :new_child_name, class: "form-control" %>
   </div>
 
-  <%= recaptcha_tags nonce: true %>
+  <%= recaptcha_tags %>
 
-  <%= f.submit "Submeter para validação", class: "btn btn-primary w-100" %>
+  <%= f.submit t('marker_submissions.form.submit'), class: "btn btn-primary w-100" %>
 <% end %>

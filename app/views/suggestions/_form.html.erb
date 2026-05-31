@@ -1,0 +1,17 @@
+<%= form_with model: suggestion do |f| %>
+  <%= render "shared/form_errors", object: suggestion %>
+
+  <div class="form-group mb-3">
+    <%= f.text_area :body, class: "form-control", rows: 5,
+        maxlength: 1024,
+        required: true,
+        placeholder: t('suggestions.placeholder') %>
+    <div class="form-text text-end">
+      <span class="suggestion-char-count">0</span>/1024
+    </div>
+  </div>
+
+  <%= recaptcha_tags %>
+
+  <%= f.submit t('suggestions.submit'), class: "btn btn-primary w-100" %>
+<% end %>
