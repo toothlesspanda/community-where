@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["input", "suggestions"]
+  static targets = ["input", "suggestions", "wrapper"]
 
   async search(event) {
     const query = event.target.value
@@ -42,6 +42,16 @@ export default class extends Controller {
       list.appendChild(item)
     })
 
+  }
+
+  toggle() {
+    if (this.hasWrapperTarget) {
+      this.wrapperTarget.classList.toggle("d-none")
+      this.wrapperTarget.classList.toggle("d-flex")
+      if (!this.wrapperTarget.classList.contains("d-none")) {
+        this.inputTarget.focus()
+      }
+    }
   }
 
   selectCity(city) {

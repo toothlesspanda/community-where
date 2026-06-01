@@ -20,11 +20,17 @@
           <dt>Address</dt>
           <dd><%= @submission.address || "—" %></dd>
 
-          <dt>Parent Category</dt>
-          <dd><%= @submission.parent_category&.code || @submission.new_parent_name || "—" %></dd>
-
-          <dt>Category</dt>
-          <dd><%= @submission.category&.code || @submission.new_child_name || "—" %></dd>
+          <dt>Categories</dt>
+          <dd>
+            <% cats = Category.where(id: Array(@submission.category_ids)) %>
+            <% if cats.any? %>
+              <% cats.each do |c| %>
+                <span class="badge bg-secondary bg-opacity-10 text-dark"><%= c.code %></span>
+              <% end %>
+            <% else %>
+              —
+            <% end %>
+          </dd>
 
           <% if @submission.name_en.present? %>
             <dt>Name (EN)</dt>

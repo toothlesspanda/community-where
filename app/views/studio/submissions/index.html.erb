@@ -18,10 +18,11 @@
           <td class="text-muted"><%= s.id %></td>
           <td class="fw-semibold"><%= s.name %></td>
           <td>
-            <% if s.category %>
-              <span class="badge bg-secondary bg-opacity-10 text-dark"><%= s.category.code %></span>
-            <% elsif s.new_child_name.present? %>
-              <span class="badge bg-warning bg-opacity-10 text-dark">new: <%= s.new_child_name %></span>
+            <% cats = Category.where(id: Array(s.category_ids)) %>
+            <% if cats.any? %>
+              <% cats.each do |c| %>
+                <span class="badge bg-secondary bg-opacity-10 text-dark"><%= c.code %></span>
+              <% end %>
             <% else %>
               <span class="text-muted">—</span>
             <% end %>

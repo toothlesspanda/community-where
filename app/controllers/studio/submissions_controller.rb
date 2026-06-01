@@ -5,7 +5,7 @@ module Studio
     def index
       @page = [params[:page].to_i, 1].max
       @submissions = MarkerSubmission
-        .includes(:category, :parent_category, :proposal)
+        .includes(:proposal)
         .order(created_at: :desc)
       @total = @submissions.count
       @submissions = @submissions.offset((@page - 1) * PER_PAGE).limit(PER_PAGE)

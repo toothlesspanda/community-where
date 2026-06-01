@@ -72,6 +72,8 @@ Rails.application.configure do
   config.assets.paths << Rails.root.join("app/assets/builds")
 
   config.hosts << /.*\.lvh\.me/
+  config.hosts << "lvh.me"
+  config.hosts << "b301-2001-8a0-7ef7-2000-c0e1-ec56-dd66-d86c.ngrok-free.app"
 
   config.active_job.queue_adapter = :solid_queue
 end

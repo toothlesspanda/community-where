@@ -1,29 +1,32 @@
 class MarkerSubmissionsController < ApplicationController
   def create
     @marker_submission = MarkerSubmission.new(marker_submission_params)
+    Rails.logger.info "[MarkerSubmission] Params: #{marker_submission_params.to_h}"
 
     unless verify_recaptcha(model: @marker_submission)
-      flash.now[:alert] = "Verificação falhou. Tenta novamente."
+      flash.now[:alert] = t("marker_submissions.recaptcha_failed")
       render turbo_stream: turbo_stream.replace(
-        "new-marker-modal",
+        "new-marker-form",
         partial: "marker_submissions/new_marker_form",
-        locals: { marker_subsmission: @marker_submission }
+        locals: { marker_submission: @marker_submission }
       )
       return
     end
 
     if @marker_submission.save
-      flash.now[:notice] = "Marcador submetido para avaliação!"
+      Rails.logger.info "[MarkerSubmission] Created ##{@marker_submission.id}"
+      flash.now[:notice] = t("marker_submissions.success")
 
       render turbo_stream: [
         turbo_stream.update("flash", partial: "shared/flash"),
-        turbo_stream.replace("new-marker-modal", partial: "marker_submissions/new_marker_form", locals: { marker_subsmission: MarkerSubmission.new })
+        turbo_stream.replace("new-marker-form", partial: "marker_submissions/new_marker_form", locals: { marker_submission: MarkerSubmission.new })
       ]
     else
+      Rails.logger.warn "[MarkerSubmission] Errors: #{@marker_submission.errors.full_messages}"
       render turbo_stream: turbo_stream.replace(
-        "new-marker-modal",
+        "new-marker-form",
         partial: "marker_submissions/new_marker_form",
-        locals: { marker_subsmission: @marker_submission }
+        locals: { marker_submission: @marker_submission }
       )
     end
   end
@@ -31,7 +34,7 @@ class MarkerSubmissionsController < ApplicationController
   private
 
   def marker_submission_params
-    permitted = params.require(:marker_submission).permit(
+    params.require(:marker_submission).permit(
       :latitude,
       :longitude,
       :description,
@@ -39,15 +42,7 @@ class MarkerSubmissionsController < ApplicationController
       :name_en,
       :description_en,
       :address,
-      :parent_category_id,
-      :category_id,
-      :new_parent_name,
-      :new_child_name
+      category_ids: []
     )
-
-    permitted[:category_id] = nil if permitted[:category_id].to_i == 0
-    permitted[:parent_category_id] = nil if permitted[:parent_category_id].to_i == 0
-
-    permitted
   end
 end

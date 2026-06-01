@@ -1,5 +1,9 @@
-<div data-controller="search" class="mb-2">
-  <div class="input-group">
+<div data-controller="search" class="mb-3">
+  <button type="button" class="btn btn-sm btn-mute text-muted d-sm-none search-toggle p-0"
+          data-action="click->search#toggle">
+    <i class="bi bi-search"></i>
+  </button>
+  <div class="input-group d-none d-sm-flex" data-search-target="wrapper">
     <span class="input-group-text bg-white border-end-0" style="color: #adadad">
       <i class="bi bi-search"></i>
     </span>

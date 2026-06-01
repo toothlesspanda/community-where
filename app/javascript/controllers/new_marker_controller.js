@@ -1,74 +1,19 @@
 import { Controller } from "@hotwired/stimulus"
-import * as bootstrap from "bootstrap"
 
 export default class extends Controller {
-    static targets = [
-        "parentSelect",
-        "childSelect",
-        "childSelectWrapper",
-        "newChildWrapper",
-        "newParentWrapper",
-        "modal"
-    ]
-
-    connect() {
-        if (this.hasParentSelectTarget) {
-            this.categories = JSON.parse(this.parentSelectTarget.dataset.categories)
-        }
-    }
-
     submitEnd(event) {
         if (event.detail.success) {
-            const modal = bootstrap.Modal.getInstance(
-                this.element.closest(".modal")
-            )
+            this.element.reset()
 
-            modal.hide()
+            // Switch back to main sidebar view
+            document.getElementById("sidebar-form")?.classList.add("d-none")
+            document.getElementById("sidebar-main")?.classList.remove("d-none")
+            document.getElementById("new-marker-message")?.classList.add("d-none")
+
+            // Remove selection marker from map
+            const mapEl = document.querySelector("[data-controller='map']")
+            const mapController = this.application.getControllerForElementAndIdentifier(mapEl, "map")
+            mapController?.removeSelectionMarker()
         }
     }
-
-    handleParentChange(event) {
-        const value = event.target.value
-
-        if (value === "other") {
-            this.newParentWrapperTarget.classList.remove("d-none")
-            this.newChildWrapperTarget.classList.remove("d-none")
-            this.childSelectWrapperTarget.classList.add("d-none")
-            return
-        } else {
-            // mostrar select por default
-            this.newChildWrapperTarget.classList.add("d-none")
-            this.newParentWrapperTarget.classList.add("d-none")
-            this.childSelectWrapperTarget.classList.remove("d-none")
-        }
-
-        const parentId = parseInt(value)
-        const parent = this.categories.find(cat => cat.id === parentId)
-
-        this.childSelectTarget.innerHTML =
-            `<option value="">${this.childSelectTarget.dataset.prompt}</option>`
-
-        if (!parent) return
-
-        parent.children.forEach(child => {
-            const option = document.createElement("option")
-            option.value = child.id
-            option.textContent = child.code
-            this.childSelectTarget.appendChild(option)
-        })
-
-
-        const otherOption = document.createElement("option")
-        otherOption.value = "other"
-        otherOption.textContent = this.childSelectTarget.dataset.other
-        this.childSelectTarget.appendChild(otherOption)
-    }
-
-    handleChildChange(event) {
-        if (event.target.value === "other") {
-            this.childSelectWrapperTarget.classList.add("d-none")
-            this.newChildWrapperTarget.classList.remove("d-none")
-        }
-    }
-
 }

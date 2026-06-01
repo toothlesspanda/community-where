@@ -2,12 +2,12 @@
 
 <div class="row g-3">
   <div class="col-md-4">
-    <div class="card">
+    <a href="<%= studio_markers_path %>" class="card text-decoration-none">
       <div class="card-body">
         <h6 class="text-muted">Markers</h6>
         <span class="fs-3 fw-semibold"><%= Marker.count %></span>
       </div>
-    </div>
+    </a>
   </div>
 
   <div class="col-md-4">
@@ -45,6 +45,17 @@
         <strong><%= @unprocessed_count %></strong> unprocessed submissions
       </div>
       <%= button_to "Run Analysis", studio_run_analysis_path, method: :post, class: "btn btn-primary btn-sm" %>
+    </div>
+  </div>
+<% end %>
+
+<% if @approved_count > 0 %>
+  <div class="card mt-3">
+    <div class="card-body d-flex align-items-center justify-content-between">
+      <div>
+        <strong><%= @approved_count %></strong> approved proposals ready to apply
+      </div>
+      <%= button_to "Apply Proposals", studio_apply_proposals_path, method: :post, class: "btn btn-success btn-sm" %>
     </div>
   </div>
 <% end %>
