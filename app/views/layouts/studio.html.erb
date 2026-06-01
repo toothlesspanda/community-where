@@ -15,6 +15,7 @@
           <a class="navbar-brand fw-semibold" href="<%= studio_root_path %>">Studio</a>
           <div class="d-flex align-items-center gap-3">
             <a href="<%= studio_submissions_path %>" class="text-decoration-none text-muted">Submissions</a>
+            <a href="<%= studio_suggestions_path %>" class="text-decoration-none text-muted">Suggestions</a>
             <a href="<%= studio_proposals_path %>" class="text-decoration-none text-muted">Proposals</a>
             <a href="/jobs" class="text-decoration-none text-muted">Jobs</a>
             <%= button_to "Logout", studio_logout_path, method: :delete,

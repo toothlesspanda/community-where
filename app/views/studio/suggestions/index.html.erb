@@ -1,0 +1,39 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h3 class="fw-semibold mb-0">Suggestions</h3>
+  <span class="text-muted"><%= @total %> total</span>
+</div>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Body</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @suggestions.each do |suggestion| %>
+          <tr>
+            <td><%= suggestion.id %></td>
+            <td><%= truncate(suggestion.body, length: 120) %></td>
+            <td class="text-nowrap"><%= suggestion.created_at.strftime("%d/%m/%Y %H:%M") %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<% if @total_pages > 1 %>
+  <nav class="mt-3">
+    <ul class="pagination pagination-sm justify-content-center">
+      <% (1..@total_pages).each do |p| %>
+        <li class="page-item <%= 'active' if p == @page %>">
+          <a class="page-link" href="<%= studio_suggestions_path(page: p) %>"><%= p %></a>
+        </li>
+      <% end %>
+    </ul>
+  </nav>
+<% end %>

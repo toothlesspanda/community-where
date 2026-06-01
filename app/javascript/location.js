@@ -7,7 +7,7 @@ export function loadLocation() {
         const name = sessionStorage.getItem("name")
 
         if(lat && long ) {
-            resolve({ lat: parseFloat(lat) , long: parseFloat(long), name: name })
+            return resolve({ lat: parseFloat(lat) , long: parseFloat(long), name: name })
         }
 
         navigator.geolocation.getCurrentPosition(

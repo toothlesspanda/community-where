@@ -24,6 +24,15 @@ export default class extends Controller {
 
     this.location_coordinates = await this.setupLocation()
 
+    if (this.locationName) {
+      const label = document.getElementById("location-label")
+      const name = document.getElementById("location-name")
+      if (label && name) {
+        name.textContent = this.locationName
+        label.classList.remove("d-none")
+      }
+    }
+
     this.setupMap(this.location_coordinates);
 
     await this.loadMarkers()
@@ -270,11 +279,12 @@ export default class extends Controller {
       categories+= `</div>`
     }
 
-    const googleLink = `https://www.google.com/maps/search/?api=1&query=${marker.latitude},${marker.longitude},z15`;
+    const googleLink = `https://www.google.com/maps/search/?api=1&query=${marker.latitude},${marker.longitude}`;
 
+    const cat = marker.categories[0]
     const leafletMarker = L.marker(
         [marker.latitude, marker.longitude],
-        { icon: this.coloredIcon(marker.categories[0].color) }
+        { icon: this.coloredIcon(cat.color, cat.icon) }
           )
         .addTo(this.markersLayer)
     this.leafletMarkers.push({ data: marker, leaflet: leafletMarker })
@@ -283,7 +293,7 @@ export default class extends Controller {
         .bindPopup(`
           <div class="popup-content">
              <span class="fs-5">${marker.name}</span><br>
-              <p class="my-1 text-muted">${marker.description}</p>
+              <p class="my-1 text-muted d-none">${marker.description}</p>
               <div class="divider my-1"></div>
               <div class="my-2">
                   ${categories}
@@ -347,13 +357,14 @@ export default class extends Controller {
       const dist = this.distanceKm(refLat, refLng, marker.latitude, marker.longitude)
       const distText = dist < 1 ? `${Math.round(dist * 1000)} m` : `${dist.toFixed(1)} km`
       const color = marker.categories[0]?.color || "#6c757d"
+      const icon = marker.categories[0]?.icon || "fa-solid fa-location-dot"
       const category = marker.categories[0]?.code || ""
 
       const item = document.createElement("button")
       item.type = "button"
       item.className = "btn btn-mute text-start p-2 d-flex align-items-start gap-2 border-bottom"
       item.innerHTML = `
-        <div class="map-dot mt-1" style="background:${color};min-width:16px;"></div>
+        <i class="${icon} mt-1" style="color:${color};font-size:1rem;min-width:16px;text-align:center;"></i>
         <div class="flex-grow-1 overflow-hidden">
           <div class="fw-semibold text-truncate">${marker.name}</div>
           <div class="text-muted small text-truncate">${category}</div>
@@ -412,14 +423,12 @@ export default class extends Controller {
     });
   }
 
-  coloredIcon(color) {
+  coloredIcon(color, icon) {
     return L.divIcon({
       className: "",
-      html: `
-        <div class="map-dot" style="background:${color};"></div>
-      `,
-      iconSize: [16, 16],
-      iconAnchor: [8, 8]
+      html: `<i class="map-marker-icon ${icon || 'fa-solid fa-location-dot'}" style="color:${color};"></i>`,
+      iconSize: [20, 20],
+      iconAnchor: [10, 10]
     })
   }
 

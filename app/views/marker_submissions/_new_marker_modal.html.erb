@@ -2,7 +2,10 @@
   <div class="modal fade" id="newMarkerModal" data-new-marker-target="modal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-body">
+        <div class="modal-header border-0 pb-0">
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body pt-0">
           <%= turbo_frame_tag "new-marker-modal" do %>
             <%= render "marker_submissions/new_marker_form" %>
           <% end %>

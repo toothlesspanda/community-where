@@ -45,9 +45,9 @@
         <%= f.label :name, t('marker_submissions.form.name'), class: "text-muted" %>
         <%= f.text_field :name, class: "form-control", required: true, placeholder: t('marker_submissions.form.name_placeholder') %>
       </div>
-      <div class="form-group mb-3">
+      <div class="form-group mb-3 d-none">
         <%= f.label :description, t('marker_submissions.form.description'), class: "text-muted" %>
-        <%= f.text_area :description, class: "form-control", required: true, rows: 3, placeholder: t('marker_submissions.form.description_placeholder') %>
+        <%= f.text_area :description, class: "form-control", rows: 3, placeholder: t('marker_submissions.form.description_placeholder') %>
       </div>
     </div>
 
@@ -56,7 +56,7 @@
         <%= f.label :name_en, t('marker_submissions.form.name'), class: "text-muted" %>
         <%= f.text_field :name_en, class: "form-control", placeholder: t('marker_submissions.form.name_placeholder_en') %>
       </div>
-      <div class="form-group mb-3">
+      <div class="form-group mb-3 d-none">
         <%= f.label :description_en, t('marker_submissions.form.description'), class: "text-muted" %>
         <%= f.text_area :description_en, class: "form-control", rows: 3, placeholder: t('marker_submissions.form.description_placeholder_en') %>
       </div>

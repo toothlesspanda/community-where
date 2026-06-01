@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_31_190303) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_01_094545) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -21,6 +21,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_31_190303) do
     t.jsonb "code_translations", default: {}
     t.datetime "created_at", null: false
     t.string "hex_color"
+    t.string "icon"
     t.bigint "parent_id"
     t.datetime "updated_at", null: false
     t.index ["code"], name: "index_categories_on_code", unique: true
@@ -102,10 +103,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_31_190303) do
   end
 
   add_foreign_key "categories", "categories", column: "parent_id"
-  add_foreign_key "marker_submissions", "categories"
-  add_foreign_key "marker_submissions", "categories", column: "parent_category_id"
+  add_foreign_key "marker_submissions", "categories", column: "parent_category_id", name: "marker_submissions_parent_category_id_fkey"
+  add_foreign_key "marker_submissions", "categories", name: "marker_submissions_category_id_fkey"
   add_foreign_key "markers_categories", "categories"
   add_foreign_key "markers_categories", "markers"
   add_foreign_key "places", "places", column: "parent_id"
-  add_foreign_key "proposals", "marker_submissions"
 end
