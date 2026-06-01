@@ -40,7 +40,8 @@ class MarkersController < ApplicationController
             id: category.id,
             code: category.code.humanize,
             parent: category.parent.code.humanize,
-            color: category.hex_color || category.parent.hex_color
+            color: category.hex_color || category.parent.hex_color,
+            icon: category.icon || category.parent.icon
           }
         end.uniq
       }

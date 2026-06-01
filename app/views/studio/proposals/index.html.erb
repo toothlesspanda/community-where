@@ -1,0 +1,39 @@
+<h3 class="fw-semibold mb-4">Proposals</h3>
+
+<ul class="nav nav-tabs mb-4">
+  <% %w[pending approved rejected applied].each do |s| %>
+    <li class="nav-item">
+      <a class="nav-link <%= 'active' if @status == s %>"
+         href="<%= studio_proposals_path(status: s) %>">
+        <%= s.capitalize %>
+        <% if @counts[s].to_i > 0 %>
+          <span class="badge bg-secondary rounded-pill"><%= @counts[s] %></span>
+        <% end %>
+      </a>
+    </li>
+  <% end %>
+</ul>
+
+<% if @proposals.empty? %>
+  <p class="text-muted">No <%= @status %> proposals.</p>
+<% else %>
+  <div class="d-flex flex-column gap-3">
+    <% @proposals.each do |proposal| %>
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <h6 class="fw-semibold mb-1"><%= proposal.proposed_data["name"] %></h6>
+              <p class="text-muted small mb-1"><%= proposal.proposed_data["description"]&.truncate(100) %></p>
+              <span class="badge bg-info text-dark"><%= proposal.action %></span>
+              <% if proposal.confidence %>
+                <span class="badge bg-secondary"><%= (proposal.confidence * 100).round %>%</span>
+              <% end %>
+            </div>
+            <a href="<%= studio_proposal_path(proposal) %>" class="btn btn-sm btn-outline-primary">Review</a>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>

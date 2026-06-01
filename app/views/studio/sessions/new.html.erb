@@ -1,0 +1,23 @@
+<div class="row justify-content-center mt-5">
+  <div class="col-sm-6 col-md-4">
+    <div class="card">
+      <div class="card-body p-4">
+        <h4 class="fw-semibold mb-4">Login</h4>
+
+        <%= form_with url: studio_login_path, method: :post, local: true do |f| %>
+          <div class="mb-3">
+            <%= f.label :username, class: "form-label" %>
+            <%= f.text_field :username, class: "form-control", autofocus: true, autocomplete: "username" %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :password, class: "form-label" %>
+            <%= f.password_field :password, class: "form-control", autocomplete: "current-password" %>
+          </div>
+
+          <%= f.submit "Sign in", class: "btn btn-primary w-100" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

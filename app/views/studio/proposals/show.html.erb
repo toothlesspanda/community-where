@@ -1,0 +1,202 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h3 class="fw-semibold mb-0">Review Proposal</h3>
+  <a href="<%= studio_proposals_path %>" class="btn btn-sm btn-outline-secondary">Back</a>
+</div>
+
+<% data = @proposal.proposed_data %>
+
+<div class="row g-4">
+  <%# Original submission %>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header bg-light">
+        <strong>Original Submission</strong>
+      </div>
+      <div class="card-body">
+        <% sub = @proposal.marker_submission %>
+        <dl class="mb-0">
+          <dt>Name</dt>
+          <dd><%= sub.name %></dd>
+          <dt>Description</dt>
+          <dd><%= sub.description %></dd>
+          <dt>Location</dt>
+          <dd><%= sub.latitude %>, <%= sub.longitude %></dd>
+          <dt>Address</dt>
+          <dd><%= sub.address || "—" %></dd>
+          <dt>Category</dt>
+          <dd><%= sub.category&.code || "—" %></dd>
+          <% if sub.new_parent_name.present? %>
+            <dt>New parent category</dt>
+            <dd><%= sub.new_parent_name %></dd>
+          <% end %>
+          <% if sub.new_child_name.present? %>
+            <dt>New child category</dt>
+            <dd><%= sub.new_child_name %></dd>
+          <% end %>
+          <% if sub.name_en.present? %>
+            <dt>Name (EN)</dt>
+            <dd><%= sub.name_en %></dd>
+          <% end %>
+          <% if sub.description_en.present? %>
+            <dt>Description (EN)</dt>
+            <dd><%= sub.description_en %></dd>
+          <% end %>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <%# Proposed data (editable) %>
+  <div class="col-md-6">
+    <div class="card border-primary">
+      <div class="card-header bg-primary bg-opacity-10">
+        <strong>Proposed Data</strong>
+        <span class="badge bg-info text-dark ms-2"><%= @proposal.action %></span>
+        <% if @proposal.confidence %>
+          <span class="badge bg-secondary ms-1"><%= (@proposal.confidence * 100).round %>% confidence</span>
+        <% end %>
+      </div>
+      <div class="card-body">
+        <% if data["reason"].present? %>
+          <div class="alert alert-light small mb-3">
+            <strong>LLM reason:</strong> <%= data["reason"] %>
+          </div>
+        <% end %>
+
+        <%= form_with model: @proposal, url: studio_proposal_path(@proposal), method: :patch, id: "proposal-form" do |f| %>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Name</label>
+            <input type="text" name="proposal[proposed_data][name]" value="<%= data["name"] %>" class="form-control">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Description</label>
+            <textarea name="proposal[proposed_data][description]" class="form-control" rows="3"><%= data["description"] %></textarea>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col">
+              <label class="form-label fw-semibold">Latitude</label>
+              <input type="text" name="proposal[proposed_data][latitude]" value="<%= data["latitude"] %>" class="form-control">
+            </div>
+            <div class="col">
+              <label class="form-label fw-semibold">Longitude</label>
+              <input type="text" name="proposal[proposed_data][longitude]" value="<%= data["longitude"] %>" class="form-control">
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Address</label>
+            <input type="text" name="proposal[proposed_data][address]" value="<%= data["address"] %>" class="form-control">
+          </div>
+
+          <%# Category selection %>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Category</label>
+
+            <div class="form-check form-switch mb-2">
+              <input type="hidden" name="proposal[proposed_data][new_category]" value="false">
+              <input type="checkbox" class="form-check-input" id="newCategoryToggle"
+                     name="proposal[proposed_data][new_category]" value="true"
+                     <%= 'checked' if data["new_category"] == true || data["new_category"] == "true" %>
+                     onchange="document.getElementById('existingCat').classList.toggle('d-none', this.checked); document.getElementById('newCat').classList.toggle('d-none', !this.checked);">
+              <label class="form-check-label" for="newCategoryToggle">New category</label>
+            </div>
+
+            <% is_new = data["new_category"] == true || data["new_category"] == "true" %>
+
+            <%# Existing category selects %>
+            <div id="existingCat" class="<%= 'd-none' if is_new %>">
+              <% selected_ids = Array(data["category_ids"]).map(&:to_i) %>
+              <% selected_child = selected_ids.first %>
+              <% selected_parent = selected_child && Category.find_by(id: selected_child)&.parent_id %>
+
+              <select class="form-select mb-2" id="proposalParentCat" onchange="updateChildCats()">
+                <option value="">Select parent category</option>
+                <% @parent_categories.each do |p| %>
+                  <option value="<%= p.id %>" <%= 'selected' if p.id == selected_parent %>
+                          data-children="<%= p.children.map { |c| { id: c.id, code: c.human_name } }.to_json %>">
+                    <%= p.human_name %>
+                  </option>
+                <% end %>
+              </select>
+
+              <select class="form-select" id="proposalChildCat" name="proposal[proposed_data][category_ids][]">
+                <option value="">Select subcategory</option>
+                <% if selected_parent %>
+                  <% Category.find(selected_parent).children.each do |c| %>
+                    <option value="<%= c.id %>" <%= 'selected' if selected_ids.include?(c.id) %>><%= c.human_name %></option>
+                  <% end %>
+                <% end %>
+              </select>
+            </div>
+
+            <%# New category inputs %>
+            <div id="newCat" class="<%= 'd-none' unless is_new %>">
+              <select class="form-select mb-2" name="proposal[proposed_data][new_parent_id]">
+                <option value="">Select existing parent or leave empty for new</option>
+                <% @parent_categories.each do |p| %>
+                  <option value="<%= p.id %>" <%= 'selected' if data["new_parent_id"].to_s == p.id.to_s %>><%= p.human_name %></option>
+                <% end %>
+              </select>
+
+              <input type="text" name="proposal[proposed_data][new_parent_name]" value="<%= data["new_parent_name"] %>"
+                     class="form-control mb-2" placeholder="New parent category name (if no existing parent)">
+
+              <input type="text" name="proposal[proposed_data][new_child_name]" value="<%= data["new_child_name"] || data["suggested_category"] %>"
+                     class="form-control" placeholder="New subcategory name">
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Name (EN)</label>
+            <input type="text" name="proposal[proposed_data][name_translations][en]" value="<%= data.dig("name_translations", "en") %>" class="form-control">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Description (EN)</label>
+            <textarea name="proposal[proposed_data][description_translations][en]" class="form-control" rows="2"><%= data.dig("description_translations", "en") %></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Reviewer Notes</label>
+            <%= f.text_area :reviewer_notes, class: "form-control", rows: 2 %>
+          </div>
+
+          <button type="submit" class="btn btn-sm btn-outline-primary">Save Changes</button>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%# Actions %>
+<div class="d-flex gap-2 mt-4">
+  <% if @proposal.status == "pending" %>
+    <%= button_to "Approve", approve_studio_proposal_path(@proposal), method: :patch, class: "btn btn-success" %>
+    <%= button_to "Reject", reject_studio_proposal_path(@proposal), method: :patch, class: "btn btn-outline-danger",
+        form: { data: { turbo_confirm: "Reject this proposal?" } } %>
+  <% elsif @proposal.status == "approved" %>
+    <%= button_to "Execute — Create Marker", execute_studio_proposal_path(@proposal), method: :post, class: "btn btn-primary" %>
+    <%= button_to "Reject", reject_studio_proposal_path(@proposal), method: :patch, class: "btn btn-outline-danger" %>
+  <% elsif @proposal.status == "applied" %>
+    <span class="badge bg-success fs-6">Applied</span>
+  <% elsif @proposal.status == "rejected" %>
+    <span class="badge bg-danger fs-6">Rejected</span>
+    <%= button_to "Re-open", approve_studio_proposal_path(@proposal), method: :patch, class: "btn btn-sm btn-outline-secondary" %>
+  <% end %>
+</div>
+
+<script>
+  function updateChildCats() {
+    const parent = document.getElementById('proposalParentCat');
+    const child = document.getElementById('proposalChildCat');
+    const selected = parent.options[parent.selectedIndex];
+    const children = JSON.parse(selected.dataset.children || '[]');
+
+    child.innerHTML = '<option value="">Select subcategory</option>';
+    children.forEach(c => {
+      child.innerHTML += `<option value="${c.id}">${c.code}</option>`;
+    });
+  }
+</script>

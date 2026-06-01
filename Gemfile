@@ -45,3 +45,4 @@ group :test do
 end
 
 gem "mobility", "~> 1.3"
+gem "mission_control-jobs"

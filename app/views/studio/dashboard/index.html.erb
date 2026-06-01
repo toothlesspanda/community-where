@@ -1,0 +1,50 @@
+<h3 class="fw-semibold mb-4">Dashboard</h3>
+
+<div class="row g-3">
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <h6 class="text-muted">Markers</h6>
+        <span class="fs-3 fw-semibold"><%= Marker.count %></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <a href="<%= studio_submissions_path %>" class="card text-decoration-none">
+      <div class="card-body">
+        <h6 class="text-muted">Submissions</h6>
+        <span class="fs-3 fw-semibold"><%= MarkerSubmission.count %></span>
+      </div>
+    </a>
+  </div>
+
+  <div class="col-md-4">
+    <a href="<%= studio_suggestions_path %>" class="card text-decoration-none">
+      <div class="card-body">
+        <h6 class="text-muted">Suggestions</h6>
+        <span class="fs-3 fw-semibold"><%= Suggestion.count %></span>
+      </div>
+    </a>
+  </div>
+
+  <div class="col-md-4">
+    <a href="<%= studio_proposals_path(status: :pending) %>" class="card text-decoration-none">
+      <div class="card-body">
+        <h6 class="text-muted">Pending Proposals</h6>
+        <span class="fs-3 fw-semibold"><%= Proposal.pending.count %></span>
+      </div>
+    </a>
+  </div>
+</div>
+
+<% if @unprocessed_count > 0 %>
+  <div class="card mt-4">
+    <div class="card-body d-flex align-items-center justify-content-between">
+      <div>
+        <strong><%= @unprocessed_count %></strong> unprocessed submissions
+      </div>
+      <%= button_to "Run Analysis", studio_run_analysis_path, method: :post, class: "btn btn-primary btn-sm" %>
+    </div>
+  </div>
+<% end %>

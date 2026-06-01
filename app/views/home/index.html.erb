@@ -1,4 +1,4 @@
-<div class="d-flex vh-100" data-controller="map" data-map-url-value="<%= markers_url %>">
+<div class="d-flex" style="height: 100dvh;" data-controller="map" data-map-url-value="<%= markers_url %>">
 
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header d-flex align-items-center justify-content-between p-3 pb-0">
@@ -41,6 +41,10 @@
       <div class="d-flex align-items-center gap-1 mb-1">
         <span class="text-muted small fw-semibold"><%= t('list.title') %></span>
         <span class="badge bg-secondary bg-opacity-25 text-muted rounded-pill small" id="list-count">0</span>
+        <span class="ms-auto d-none text-muted small d-flex align-items-center gap-1" id="location-label">
+          <i class="bi bi-crosshair"></i>
+          <span id="location-name"></span>
+        </span>
       </div>
 
       <div class="sidebar-scroll-area">

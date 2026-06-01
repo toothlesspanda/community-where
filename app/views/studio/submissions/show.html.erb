@@ -1,0 +1,66 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h3 class="fw-semibold mb-0">Submission #<%= @submission.id %></h3>
+  <a href="<%= studio_submissions_path %>" class="btn btn-sm btn-outline-secondary">Back</a>
+</div>
+
+<div class="row g-4">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <dl class="mb-0">
+          <dt>Name</dt>
+          <dd><%= @submission.name %></dd>
+
+          <dt>Description</dt>
+          <dd><%= @submission.description %></dd>
+
+          <dt>Location</dt>
+          <dd><%= @submission.latitude %>, <%= @submission.longitude %></dd>
+
+          <dt>Address</dt>
+          <dd><%= @submission.address || "—" %></dd>
+
+          <dt>Parent Category</dt>
+          <dd><%= @submission.parent_category&.code || @submission.new_parent_name || "—" %></dd>
+
+          <dt>Category</dt>
+          <dd><%= @submission.category&.code || @submission.new_child_name || "—" %></dd>
+
+          <% if @submission.name_en.present? %>
+            <dt>Name (EN)</dt>
+            <dd><%= @submission.name_en %></dd>
+          <% end %>
+
+          <% if @submission.description_en.present? %>
+            <dt>Description (EN)</dt>
+            <dd><%= @submission.description_en %></dd>
+          <% end %>
+
+          <dt>Submitted</dt>
+          <dd><%= @submission.created_at.strftime("%d/%m/%Y %H:%M") %></dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <% if @submission.proposal %>
+      <div class="card">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+          <strong>Proposal</strong>
+          <a href="<%= studio_proposal_path(@submission.proposal) %>" class="btn btn-sm btn-outline-primary">Review</a>
+        </div>
+        <div class="card-body">
+          <span class="badge bg-<%= { 'pending' => 'warning', 'approved' => 'success', 'rejected' => 'danger', 'applied' => 'primary' }[@submission.proposal.status] %> mb-2">
+            <%= @submission.proposal.status %>
+          </span>
+          <p class="small text-muted mb-0"><%= @submission.proposal.proposed_data["reason"] %></p>
+        </div>
+      </div>
+    <% else %>
+      <div class="card">
+        <div class="card-body text-muted">No proposal yet.</div>
+      </div>
+    <% end %>
+  </div>
+</div>
