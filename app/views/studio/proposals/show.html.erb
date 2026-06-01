@@ -23,16 +23,17 @@
           <dd><%= sub.latitude %>, <%= sub.longitude %></dd>
           <dt>Address</dt>
           <dd><%= sub.address || "—" %></dd>
-          <dt>Category</dt>
-          <dd><%= sub.category&.code || "—" %></dd>
-          <% if sub.new_parent_name.present? %>
-            <dt>New parent category</dt>
-            <dd><%= sub.new_parent_name %></dd>
-          <% end %>
-          <% if sub.new_child_name.present? %>
-            <dt>New child category</dt>
-            <dd><%= sub.new_child_name %></dd>
-          <% end %>
+          <dt>Categories</dt>
+          <dd>
+            <% cats = Category.where(id: Array(sub.category_ids)) %>
+            <% if cats.any? %>
+              <% cats.each do |c| %>
+                <span class="badge bg-secondary bg-opacity-10 text-dark"><%= c.code %></span>
+              <% end %>
+            <% else %>
+              —
+            <% end %>
+          </dd>
           <% if sub.name_en.present? %>
             <dt>Name (EN)</dt>
             <dd><%= sub.name_en %></dd>
@@ -92,7 +93,7 @@
 
           <%# Category selection %>
           <div class="mb-3">
-            <label class="form-label fw-semibold">Category</label>
+            <label class="form-label fw-semibold">Categories</label>
 
             <div class="form-check form-switch mb-2">
               <input type="hidden" name="proposal[proposed_data][new_category]" value="false">
@@ -104,31 +105,26 @@
             </div>
 
             <% is_new = data["new_category"] == true || data["new_category"] == "true" %>
+            <% selected_ids = Array(data["category_ids"]).map(&:to_i) %>
 
-            <%# Existing category selects %>
+            <%# Existing category checkboxes %>
             <div id="existingCat" class="<%= 'd-none' if is_new %>">
-              <% selected_ids = Array(data["category_ids"]).map(&:to_i) %>
-              <% selected_child = selected_ids.first %>
-              <% selected_parent = selected_child && Category.find_by(id: selected_child)&.parent_id %>
-
-              <select class="form-select mb-2" id="proposalParentCat" onchange="updateChildCats()">
-                <option value="">Select parent category</option>
-                <% @parent_categories.each do |p| %>
-                  <option value="<%= p.id %>" <%= 'selected' if p.id == selected_parent %>
-                          data-children="<%= p.children.map { |c| { id: c.id, code: c.human_name } }.to_json %>">
-                    <%= p.human_name %>
-                  </option>
-                <% end %>
-              </select>
-
-              <select class="form-select" id="proposalChildCat" name="proposal[proposed_data][category_ids][]">
-                <option value="">Select subcategory</option>
-                <% if selected_parent %>
-                  <% Category.find(selected_parent).children.each do |c| %>
-                    <option value="<%= c.id %>" <%= 'selected' if selected_ids.include?(c.id) %>><%= c.human_name %></option>
-                  <% end %>
-                <% end %>
-              </select>
+              <% @parent_categories.each do |parent| %>
+                <% next if parent.children.empty? %>
+                <div class="mb-2">
+                  <small class="text-muted fw-semibold"><%= parent.human_name %></small>
+                  <div class="d-flex flex-wrap gap-2 mt-1">
+                    <% parent.children.each do |child| %>
+                      <div class="form-check form-check-inline">
+                        <input type="checkbox" class="form-check-input" id="proposal_cat_<%= child.id %>"
+                               name="proposal[proposed_data][category_ids][]" value="<%= child.id %>"
+                               <%= 'checked' if selected_ids.include?(child.id) %>>
+                        <label class="form-check-label small" for="proposal_cat_<%= child.id %>"><%= child.human_name %></label>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
             </div>
 
             <%# New category inputs %>
@@ -187,16 +183,3 @@
   <% end %>
 </div>
 
-<script>
-  function updateChildCats() {
-    const parent = document.getElementById('proposalParentCat');
-    const child = document.getElementById('proposalChildCat');
-    const selected = parent.options[parent.selectedIndex];
-    const children = JSON.parse(selected.dataset.children || '[]');
-
-    child.innerHTML = '<option value="">Select subcategory</option>';
-    children.forEach(c => {
-      child.innerHTML += `<option value="${c.id}">${c.code}</option>`;
-    });
-  }
-</script>

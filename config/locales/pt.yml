@@ -17,9 +17,13 @@ pt:
     new_point: "Novo Ponto"
     suggestions: "Sugestões"
     stop_adding: "Clica no mapa para adicionar ponto"
+    form_hint: "Clica no mapa ou usa a tua localização para definir as coordenadas."
     current_location: "A tua localização atual:"
+    refresh_location: "Atualizar localização"
 
   marker_submissions:
+    success: "Submissão enviada com sucesso! Será validada antes de ser publicada."
+    recaptcha_failed: "Verificação falhou. Tenta novamente."
     form:
       address: "Morada"
       latitude: "Latitude"
@@ -32,11 +36,6 @@ pt:
       description_placeholder_en: "Description in English"
       optional: "(opcional)"
       category: "Categoria"
-      select_category: "Selecionar categoria"
-      other_category: "Outra…"
-      subcategory: "Subcategoria"
-      select_subcategory: "Selecionar subcategoria"
-      new_category: "Nova categoria"
       submit: "Submeter para validação"
 
   welcome:

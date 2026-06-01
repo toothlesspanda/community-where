@@ -66,7 +66,7 @@ class SubmissionAnalyser
     existing_set = existing.to_set
 
     submissions.partition do |s|
-      s.category_id && existing_set.include?([s.name&.downcase, s.category_id])
+      Array(s.category_ids).any? { |cid| existing_set.include?([s.name&.downcase, cid]) }
     end
   end
 
@@ -146,11 +146,9 @@ class SubmissionAnalyser
         description_en: s.description_en
       }
 
-      if s.category
-        data[:category] = s.category.code
-      else
-        data[:new_parent_category] = s.new_parent_name
-        data[:new_child_category] = s.new_child_name
+      if Array(s.category_ids).any?
+        categories = Category.where(id: s.category_ids)
+        data[:categories] = categories.map(&:code)
       end
 
       data

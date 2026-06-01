@@ -1,0 +1,44 @@
+<h3 class="fw-semibold mb-4">Markers <span class="text-muted fw-normal">(<%= @total %>)</span></h3>
+
+<div class="table-responsive">
+  <table class="table table-hover align-middle">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Categories</th>
+        <th>Address</th>
+        <th>Location</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @markers.each do |m| %>
+        <tr>
+          <td class="text-muted"><%= m.id %></td>
+          <td class="fw-semibold"><%= m.name %></td>
+          <td>
+            <% m.categories.each do |c| %>
+              <span class="badge bg-secondary bg-opacity-10 text-dark"><%= c.code %></span>
+            <% end %>
+          </td>
+          <td class="text-muted small"><%= m.address || "—" %></td>
+          <td class="text-muted small"><%= m.latitude&.round(4) %>, <%= m.longitude&.round(4) %></td>
+          <td class="text-muted small"><%= m.created_at.strftime("%d/%m/%Y") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<% if @total_pages > 1 %>
+  <nav>
+    <ul class="pagination pagination-sm justify-content-center">
+      <% (1..@total_pages).each do |p| %>
+        <li class="page-item <%= 'active' if p == @page %>">
+          <a class="page-link" href="<%= studio_markers_path(page: p) %>"><%= p %></a>
+        </li>
+      <% end %>
+    </ul>
+  </nav>
+<% end %>

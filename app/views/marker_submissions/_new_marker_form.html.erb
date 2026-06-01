@@ -3,27 +3,31 @@
   action: "turbo:submit-end->new-marker#submitEnd"
 } do |f| %>
   <%= render "shared/form_errors", object: @marker_submission %>
-  <%= f.hidden_field :latitude, id: "latHidden" %>
-  <%= f.hidden_field :longitude, id: "lngHidden" %>
-  <%= f.hidden_field :address, id: "addressHidden" %>
 
-  <div class="form-group mb-3">
-    <%= f.label :address, t('marker_submissions.form.address'), class: "text-muted" %>
-    <div class="input-group">
-      <span class="input-group-text bg-white"><i class="bi bi-geo-alt"></i></span>
-      <%= f.text_field :address, id: "addressField", disabled: true, class: "form-control disabled" %>
+  <p class="text-muted small mb-3"><%= t('markers.form_hint') %></p>
+
+  <div class="row mb-2">
+    <div class="col">
+      <%= f.label :latitude, t('marker_submissions.form.latitude'), class: "text-muted small" %>
+      <%= f.text_field :latitude, id: "latField", class: "form-control form-control-sm",
+          data: { action: "change->map#coordsChanged" } %>
+    </div>
+    <div class="col">
+      <%= f.label :longitude, t('marker_submissions.form.longitude'), class: "text-muted small" %>
+      <%= f.text_field :longitude, id: "lngField", class: "form-control form-control-sm",
+          data: { action: "change->map#coordsChanged" } %>
+    </div>
+    <div class="col-auto d-flex align-items-end">
+      <button type="button" class="btn btn-sm btn-outline-secondary" data-action="click->map#useMyLocation"
+              title="<%= t('markers.current_location') %>">
+        <i class="bi bi-crosshair"></i>
+      </button>
     </div>
   </div>
 
-  <div class="row mb-3">
-    <div class="col-6">
-      <%= f.label "Latitude", t('marker_submissions.form.latitude'), class: "text-muted" %>
-      <%= f.text_field :latitude, id: "latField", disabled: true, class: "form-control disabled" %>
-    </div>
-    <div class="col-6">
-      <%= f.label "longitude", t('marker_submissions.form.longitude'), class: "text-muted" %>
-      <%= f.text_field :longitude, id: "lngField", disabled: true, class: "form-control disabled" %>
-    </div>
+  <div class="form-group mb-3">
+    <%= f.label :address, t('marker_submissions.form.address'), class: "text-muted small" %>
+    <%= f.text_field :address, id: "addressField", class: "form-control form-control-sm" %>
   </div>
 
   <ul class="nav nav-tabs nav-fill mb-3" role="tablist">
@@ -64,51 +68,22 @@
   </div>
 
   <div class="form-group mb-3">
-    <%= f.label :parent_category_id, t('marker_submissions.form.category'), class: "text-muted" %>
-
-    <%= f.select :parent_category_id,
-                 options_for_select(
-                   @parent_categories.map { |c| [c.human_name, c.id] } + [[t('marker_submissions.form.other_category'), 'other']]
-                 ),
-                 { prompt: t('marker_submissions.form.select_category') },
-                 class: "form-control",
-                 required: true,
-                 data: {
-                   action: "change->new-marker#handleParentChange",
-                   new_marker_target: "parentSelect",
-                   categories: @parent_categories.map { |p|
-                     {
-                       id: p.id,
-                       code: p.human_name,
-                       children: p.children.map { |c| { id: c.id, code: c.human_name } }
-                     }
-                   }.to_json
-                 } %>
-  </div>
-
-  <div class="form-group mb-3 d-none" data-new-marker-target="newParentWrapper">
-    <%= f.label :new_parent_name, t('marker_submissions.form.new_category'), class: "text-muted" %>
-    <%= f.text_field :new_parent_name, class: "form-control" %>
-  </div>
-
-  <div class="form-group mb-3 d-none" data-new-marker-target="childSelectWrapper">
-    <%= f.label :category_id, t('marker_submissions.form.subcategory'), class: "text-muted" %>
-
-    <%= f.select :category_id,
-                 [],
-                 { prompt: t('marker_submissions.form.select_subcategory') },
-                 class: "form-control",
-                 data: {
-                   new_marker_target: "childSelect",
-                   action: "change->new-marker#handleChildChange",
-                   prompt: t('marker_submissions.form.select_subcategory'),
-                   other: t('marker_submissions.form.other_category')
-                 } %>
-  </div>
-
-  <div class="form-group mb-3 d-none" data-new-marker-target="newChildWrapper">
-    <%= f.label :new_child_name, t('marker_submissions.form.subcategory'), class: "text-muted" %>
-    <%= f.text_field :new_child_name, class: "form-control" %>
+    <label class="text-muted"><%= t('marker_submissions.form.category') %></label>
+    <% @all_parent_categories.each do |parent| %>
+      <% next if parent.children.empty? %>
+      <div class="mb-2">
+        <small class="text-muted fw-semibold"><%= parent.human_name %></small>
+        <div class="d-flex flex-wrap gap-2 mt-1">
+          <% parent.children.each do |child| %>
+            <div class="form-check form-check-inline">
+              <%= check_box_tag "marker_submission[category_ids][]", child.id, false,
+                    id: "category_#{child.id}", class: "form-check-input" %>
+              <%= label_tag "category_#{child.id}", child.human_name, class: "form-check-label small" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
   </div>
 
   <%= recaptcha_tags %>

@@ -13,5 +13,6 @@ class ApplicationController < ActionController::Base
     @category_ids_with_markers = MarkerCategory.distinct.pluck(:category_id).to_set
     parent_ids = Category.where(id: @category_ids_with_markers).distinct.pluck(:parent_id).compact
     @parent_categories = Category.where(id: parent_ids).includes(:children)
+    @all_parent_categories = Category.where(parent_id: nil).includes(:children)
   end
 end

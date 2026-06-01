@@ -1,0 +1,57 @@
+[
+  { "name": "Ecoponto Vidro - Av. Liberdade",          "description": "Contentor de vidro junto ao quiosque",                   "address": "Av. da Liberdade, Lisboa",                  "lat": 38.7193, "lng": -9.1423, "categories": ["glass"] },
+  { "name": "Ecoponto Papel - Praça do Comércio",      "description": "Ecoponto azul para papel e cartão",                      "address": "Praça do Comércio, Lisboa",                 "lat": 38.7075, "lng": -9.1365, "categories": ["paper"] },
+  { "name": "Contentor de Plástico - Belém",           "description": "Ecoponto amarelo junto ao Mosteiro dos Jerónimos",       "address": "Praça do Império, Belém, Lisboa",           "lat": 38.6979, "lng": -9.2068, "categories": ["plastic"] },
+  { "name": "Ponto de Óleo Usado - Mercado da Ribeira","description": "Contentor para depositar óleo alimentar usado",          "address": "Av. 24 de Julho, Lisboa",                   "lat": 38.7069, "lng": -9.1456, "categories": ["oils"] },
+  { "name": "Recolha de Eletrónica - Centro Colombo",  "description": "Ponto de recolha de pequenos eletrodomésticos",          "address": "Centro Colombo, Lisboa",                    "lat": 38.7545, "lng": -9.1870, "categories": ["electronics"] },
+  { "name": "Contentor de Roupa - Parque das Nações",  "description": "Contentor de roupa usada junto à estação do Oriente",    "address": "Gare do Oriente, Lisboa",                   "lat": 38.7679, "lng": -9.0990, "categories": ["clothes"] },
+  { "name": "Carregador EV - Saldanha",                "description": "Posto de carregamento rápido para veículos elétricos",   "address": "Praça Duque de Saldanha, Lisboa",           "lat": 38.7351, "lng": -9.1453, "categories": ["electric_charge"] },
+  { "name": "Estação GIRA - Cais do Sodré",            "description": "Estação de bicicletas elétricas partilhadas",            "address": "Cais do Sodré, Lisboa",                     "lat": 38.7063, "lng": -9.1440, "categories": ["electric_bikes"] },
+  { "name": "Parque Bicicletas - Alameda",             "description": "Parque coberto para bicicletas junto ao metro",          "address": "Alameda D. Afonso Henriques, Lisboa",       "lat": 38.7374, "lng": -9.1335, "categories": ["bikes_park"] },
+  { "name": "Campo Futsal - Olivais",                  "description": "Campo de futsal público ao ar livre",                    "address": "Parque das Nações, Lisboa",                 "lat": 38.7710, "lng": -9.1010, "categories": ["futsal_field"] },
+  { "name": "Skate Park - Ericeira",                   "description": "Skate park municipal junto à praia",                     "address": "Ericeira",                                  "lat": 38.9630, "lng": -9.4170, "categories": ["skate_park"] },
+  { "name": "Banco Alimentar - Alcântara",             "description": "Ponto de recolha do Banco Alimentar",                    "address": "Rua de Alcântara, Lisboa",                  "lat": 38.7040, "lng": -9.1780, "categories": ["food"] },
+  { "name": "Refood - Graça",                          "description": "Ponto de recolha e distribuição de alimentos",           "address": "Largo da Graça, Lisboa",                    "lat": 38.7189, "lng": -9.1306, "categories": ["food"] },
+  { "name": "Loja Social - Benfica",                   "description": "Doação de roupa, brinquedos e material escolar",         "address": "Estrada de Benfica, Lisboa",                "lat": 38.7490, "lng": -9.1960, "categories": ["kids", "toys", "clothes"] },
+  { "name": "Ecoponto Lâmpadas - Amoreiras",           "description": "Ponto de recolha de lâmpadas usadas no centro comercial","address": "Amoreiras Shopping, Lisboa",                "lat": 38.7210, "lng": -9.1590, "categories": ["lamps"] },
+  { "name": "Hospital Veterinário - Lisboa",           "description": "Hospital veterinário com urgência 24h",                  "address": "Av. Almirante Reis, Lisboa",                "lat": 38.7320, "lng": -9.1360, "categories": ["hospital"] },
+
+  { "name": "Ecoponto Vidro - Ribeira",                "description": "Contentor de vidro junto ao rio Douro",                  "address": "Cais da Ribeira, Porto",                   "lat": 41.1408, "lng": -8.6132, "categories": ["glass"] },
+  { "name": "Ecoponto Papel - Aliados",                "description": "Ecoponto azul na Avenida dos Aliados",                   "address": "Av. dos Aliados, Porto",                   "lat": 41.1487, "lng": -8.6107, "categories": ["paper"] },
+  { "name": "Contentor Plástico - Boavista",           "description": "Ecoponto amarelo junto à rotunda da Boavista",           "address": "Praça Mouzinho de Albuquerque, Porto",     "lat": 41.1581, "lng": -8.6310, "categories": ["plastic"] },
+  { "name": "Contentor de Roupa - Campanhã",           "description": "Contentor de roupa usada junto à estação",               "address": "Estação de Campanhã, Porto",               "lat": 41.1488, "lng": -8.5856, "categories": ["clothes"] },
+  { "name": "Carregador EV - Casa da Música",          "description": "Posto de carregamento de veículos elétricos",            "address": "Av. da Boavista, Porto",                   "lat": 41.1586, "lng": -8.6306, "categories": ["electric_charge"] },
+  { "name": "Campo Voleibol - Foz do Douro",           "description": "Campo de voleibol de praia",                             "address": "Praia do Ourigo, Porto",                   "lat": 41.1500, "lng": -8.6780, "categories": ["volleyball_field"] },
+  { "name": "Canil Municipal do Porto",                "description": "Canil e gatil municipal, adoção de animais",             "address": "Rua de São Roque, Porto",                  "lat": 41.1650, "lng": -8.6050, "categories": ["canil", "gatil"] },
+  { "name": "Refood - Cedofeita",                      "description": "Recolha e distribuição de excedentes alimentares",       "address": "Rua de Cedofeita, Porto",                  "lat": 41.1520, "lng": -8.6180, "categories": ["food"] },
+  { "name": "Recolha Eletrónica - NorteShopping",      "description": "Ponto de recolha de eletrónica usada",                   "address": "NorteShopping, Matosinhos",                "lat": 41.1870, "lng": -8.6550, "categories": ["electronics"] },
+
+  { "name": "Ecoponto Vidro - Universidade",           "description": "Contentor de vidro junto à Universidade de Coimbra",     "address": "Largo da Porta Férrea, Coimbra",           "lat": 40.2088, "lng": -8.4264, "categories": ["glass"] },
+  { "name": "Ecoponto Orgânico - Mercado D. Pedro V",  "description": "Contentor para resíduos orgânicos no mercado municipal", "address": "Rua Olímpio Nicolau, Coimbra",             "lat": 40.2110, "lng": -8.4310, "categories": ["organic"] },
+  { "name": "Carregador EV - Estação Coimbra-B",       "description": "Posto de carregamento junto à estação de comboios",      "address": "Estação Coimbra-B, Coimbra",               "lat": 40.2225, "lng": -8.4390, "categories": ["electric_charge"] },
+  { "name": "Parque Bicicletas - Parque Verde do Mondego","description": "Estacionamento para bicicletas junto ao rio",         "address": "Parque Verde do Mondego, Coimbra",         "lat": 40.2050, "lng": -8.4310, "categories": ["bikes_park"] },
+
+  { "name": "Ecoponto Plástico - Bom Jesus",           "description": "Ecoponto amarelo junto ao Bom Jesus",                    "address": "Bom Jesus, Braga",                         "lat": 41.5549, "lng": -8.3776, "categories": ["plastic"] },
+  { "name": "Contentor de Roupa - Centro de Braga",    "description": "Contentor para doação de roupa usada",                   "address": "Largo do Paço, Braga",                     "lat": 41.5503, "lng": -8.4264, "categories": ["clothes"] },
+  { "name": "Abrigo de Animais - Braga",               "description": "Abrigo municipal para animais abandonados",              "address": "Braga",                                     "lat": 41.5605, "lng": -8.4350, "categories": ["shelter"] },
+
+  { "name": "Ecoponto Vidro - Marina de Faro",         "description": "Contentor de vidro junto à marina",                      "address": "Marina de Faro, Faro",                     "lat": 37.0150, "lng": -7.9340, "categories": ["glass"] },
+  { "name": "Contentor Papel - Centro de Faro",        "description": "Ecoponto azul no centro histórico",                      "address": "Rua de Santo António, Faro",               "lat": 37.0146, "lng": -7.9352, "categories": ["paper"] },
+  { "name": "Carregador EV - Forum Algarve",           "description": "Posto de carregamento no parque do Forum Algarve",       "address": "Forum Algarve, Faro",                      "lat": 37.0240, "lng": -7.9270, "categories": ["electric_charge"] },
+  { "name": "Parque Canino - Quarteira",               "description": "Parque cercado para cães",                               "address": "Quarteira, Loulé",                         "lat": 37.0690, "lng": -8.1000, "categories": ["parks"] },
+
+  { "name": "Ecoponto Vidro - Praça do Giraldo",       "description": "Contentor de vidro no centro histórico",                 "address": "Praça do Giraldo, Évora",                  "lat": 38.5711, "lng": -7.9075, "categories": ["glass"] },
+  { "name": "Loja Social - Évora",                     "description": "Doação de roupa e brinquedos para crianças e mães",      "address": "Évora",                                     "lat": 38.5730, "lng": -7.9090, "categories": ["kids", "moms", "toys"] },
+
+  { "name": "Ecoponto Plástico - Canal Central",       "description": "Ecoponto amarelo junto aos canais de Aveiro",            "address": "Canal Central, Aveiro",                    "lat": 40.6405, "lng": -8.6538, "categories": ["plastic"] },
+  { "name": "Estação BUGA - Aveiro",                   "description": "Bicicletas gratuitas da cidade de Aveiro",               "address": "Estação de Aveiro",                        "lat": 40.6430, "lng": -8.6440, "categories": ["electric_bikes"] },
+
+  { "name": "Ecoponto Vidro - Funchal",                "description": "Contentor de vidro junto ao mercado dos lavradores",     "address": "Mercado dos Lavradores, Funchal",          "lat": 32.6480, "lng": -16.9070, "categories": ["glass"] },
+  { "name": "Hospital Veterinário - Funchal",          "description": "Clínica veterinária com urgência",                       "address": "Funchal, Madeira",                         "lat": 32.6500, "lng": -16.9200, "categories": ["hospital"] },
+
+  { "name": "Ecoponto Óleo - Mercado do Livramento",   "description": "Ponto de recolha de óleos alimentares usados",           "address": "Mercado do Livramento, Setúbal",           "lat": 38.5240, "lng": -8.8930, "categories": ["oils"] },
+  { "name": "Campo Futsal - Setúbal",                  "description": "Campo de futsal público no parque urbano",               "address": "Parque Urbano de Albarquel, Setúbal",      "lat": 38.5190, "lng": -8.8840, "categories": ["futsal_field"] },
+
+  { "name": "Ecoponto Papel - Rossio de Viseu",        "description": "Ecoponto azul no centro da cidade",                      "address": "Rossio, Viseu",                            "lat": 40.6610, "lng": -7.9120, "categories": ["paper"] },
+  { "name": "Contentor de Roupa - Viseu",              "description": "Contentor para roupa usada",                             "address": "Av. Emídio Navarro, Viseu",                "lat": 40.6590, "lng": -7.9100, "categories": ["clothes"] }
+]

@@ -31,6 +31,9 @@
   flex: 1 1 0;
   overflow-y: auto;
   min-height: 0;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
 }
 
 .sidebar-footer {
@@ -63,6 +66,10 @@
     display: none;
   }
 
+  .sidebar-footer-btn i {
+    font-size: 1.3rem;
+  }
+
   .sidebar-backdrop {
     display: block;
     position: fixed;
@@ -92,7 +99,8 @@
 
 .map-marker-icon {
   font-size: 1.25rem;
-  -webkit-text-stroke: 2px white;
+  color: color-mix(in srgb, var(--marker-color) 20%, white) !important;
+  -webkit-text-stroke: 3px var(--marker-color);
   paint-order: stroke fill;
   filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
 }
@@ -174,6 +182,17 @@
 }
 
 
+
+// List items
+#markers-list .list-item {
+  border-bottom: 1px solid #00000010 !important;
+  border-radius: 0;
+}
+
+#markers-list .list-item.active {
+  background: var(--bs-primary-bg-subtle);
+  border-left: 3px solid var(--bs-primary) !important;
+}
 
 /// BOOTSTRAP OVERRIDES
 .btn, .card {

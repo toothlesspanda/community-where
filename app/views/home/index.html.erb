@@ -1,81 +1,108 @@
 <div class="d-flex" style="height: 100dvh;" data-controller="map" data-map-url-value="<%= markers_url %>">
 
   <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header d-flex align-items-center justify-content-between p-3 pb-0">
-      <span class="fs-4 fw-semibold"><%= t('app_name') %></span>
-      <button type="button" class="btn btn-sm btn-mute p-1" data-action="click->map#toggleSidebar">
-        <i class="bi bi-x-lg"></i>
-      </button>
-    </div>
+    <%# ── Main view ── %>
+    <div id="sidebar-main" class="d-flex flex-column h-100">
+      <div class="sidebar-header d-flex align-items-center justify-content-between p-3 pb-0">
+        <span class="fs-4 fw-semibold"><%= t('app_name') %></span>
+        <button type="button" class="btn btn-sm btn-mute p-1" data-action="click->map#toggleSidebar">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
 
-    <div class="sidebar-body p-3 pt-2">
-      <% unless cookies[:welcome_dismissed] %>
-        <div class="alert alert-primary bg-primary bg-opacity-10 border-0 small mb-3" id="welcome-banner">
-          <div class="d-flex justify-content-between align-items-start">
-            <div>
-              <strong><%= t('welcome.title') %></strong>
-              <p class="mb-0 mt-1 text-muted"><%= t('welcome.description') %></p>
+      <div class="sidebar-body p-3 pt-2">
+        <% unless cookies[:welcome_dismissed] %>
+          <div class="alert alert-primary bg-primary bg-opacity-10 border-0 small mb-3" id="welcome-banner">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <strong><%= t('welcome.title') %></strong>
+                <p class="mb-0 mt-1 text-muted"><%= t('welcome.description') %></p>
+              </div>
+              <button type="button" class="btn-close btn-close-sm ms-2" data-action="click->map#dismissWelcome"></button>
             </div>
-            <button type="button" class="btn-close btn-close-sm ms-2" data-action="click->map#dismissWelcome"></button>
+          </div>
+        <% end %>
+
+        <%= render "home/search_sidebar" %>
+
+        <div class="d-flex gap-2 mb-2">
+          <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 d-flex align-items-center gap-1"
+                  data-bs-toggle="modal" data-bs-target="#filtersModal">
+            <i class="bi bi-funnel"></i> <%= t('filters.title') %>
+            <span class="badge bg-primary rounded-pill d-none" id="filter-count"></span>
+          </button>
+
+          <button type="button" class="btn btn-primary btn-sm btn-mute bg-primary bg-opacity-10 text-primary border-0 rounded-pill px-3 d-flex align-items-center gap-1"
+                  data-action="map#showMarkerForm">
+            <i class="bi bi-plus-lg"></i> <%= t('markers.new_point') %>
+          </button>
+        </div>
+
+        <div id="active-filters" class="d-flex flex-wrap gap-1 mb-2"></div>
+
+        <div class="d-flex align-items-center gap-1 mb-1">
+          <span class="text-muted small fw-semibold"><%= t('list.title') %></span>
+          <span class="badge bg-secondary bg-opacity-25 text-muted rounded-pill small" id="list-count">0</span>
+          <span class="ms-auto text-muted small d-flex align-items-center gap-1">
+            <span class="d-none d-flex align-items-center gap-1" id="location-label">
+              <i class="bi bi-crosshair"></i>
+              <span id="location-name"></span>
+            </span>
+            <button type="button" class="btn btn-sm btn-mute p-0 text-muted" id="refresh-location"
+                    data-action="click->map#refreshLocation" title="<%= t('markers.refresh_location') %>">
+              <i class="bi bi-arrow-clockwise"></i>
+            </button>
+          </span>
+        </div>
+
+        <div class="sidebar-scroll-area">
+          <div id="markers-list" class="d-flex flex-column gap-1"></div>
+          <p class="text-muted small text-center mt-2 d-none" id="list-empty"><%= t('list.empty') %></p>
+        </div>
+
+        <div class="sidebar-footer">
+          <div class="divider"></div>
+          <div class="d-flex align-items-center justify-content-center gap-3 justify-content-sm-between">
+            <button type="button" class="btn btn-sm btn-mute text-muted d-flex align-items-center gap-1 p-0 sidebar-footer-btn"
+                    data-bs-toggle="modal" data-bs-target="#aboutModal">
+              <i class="bi bi-info-circle"></i>
+              <span class="small d-none d-sm-inline"><%= t('about.link') %></span>
+            </button>
+
+            <button type="button" class="btn btn-sm btn-mute text-muted d-flex align-items-center gap-1 p-0 sidebar-footer-btn"
+                    data-bs-toggle="modal" data-bs-target="#suggestionModal">
+              <i class="bi bi-chat-left-heart"></i>
+              <span class="small d-none d-sm-inline"><%= t('markers.suggestions') %></span>
+            </button>
+
+            <% other_locale = I18n.locale == :pt ? :en : :pt %>
+            <%= button_to locale_path(locale: other_locale),
+                  method: :patch,
+                  class: "btn btn-sm btn-light btn-mute opacity-50 rounded-pill px-2" do %>
+              <span class="<%= 'fw-bold' if I18n.locale == :pt %>">PT</span>
+              <span class="text-muted">|</span>
+              <span class="<%= 'fw-bold' if I18n.locale == :en %>">EN</span>
+            <% end %>
           </div>
         </div>
-      <% end %>
+      </div>
+    </div>
 
-      <%= render "home/search_sidebar" %>
-
-      <div class="d-flex gap-2 mb-2">
-        <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 d-flex align-items-center gap-1"
-                data-bs-toggle="modal" data-bs-target="#filtersModal">
-          <i class="bi bi-funnel"></i> <%= t('filters.title') %>
-          <span class="badge bg-primary rounded-pill d-none" id="filter-count"></span>
+    <%# ── New marker form view ── %>
+    <div id="sidebar-form" class="d-none d-flex flex-column h-100">
+      <div class="sidebar-header d-flex align-items-center gap-2 p-3 pb-0">
+        <button type="button" class="btn btn-sm btn-mute p-1" data-action="click->map#hideMarkerForm">
+          <i class="bi bi-arrow-left"></i>
         </button>
-
-        <button type="button" class="btn btn-primary btn-sm btn-mute bg-primary bg-opacity-10 text-primary border-0 rounded-pill px-3 d-flex align-items-center gap-1"
-                data-action="map#enableAddMode">
-          <i class="bi bi-plus-lg"></i> <%= t('markers.new_point') %>
+        <span class="fs-5 fw-semibold"><%= t('markers.new_point') %></span>
+        <button type="button" class="btn btn-sm btn-mute p-1 ms-auto" data-action="click->map#toggleSidebar">
+          <i class="bi bi-x-lg"></i>
         </button>
       </div>
-
-      <div id="active-filters" class="d-flex flex-wrap gap-1 mb-2"></div>
-
-      <div class="d-flex align-items-center gap-1 mb-1">
-        <span class="text-muted small fw-semibold"><%= t('list.title') %></span>
-        <span class="badge bg-secondary bg-opacity-25 text-muted rounded-pill small" id="list-count">0</span>
-        <span class="ms-auto d-none text-muted small d-flex align-items-center gap-1" id="location-label">
-          <i class="bi bi-crosshair"></i>
-          <span id="location-name"></span>
-        </span>
-      </div>
-
-      <div class="sidebar-scroll-area">
-        <div id="markers-list" class="d-flex flex-column gap-1"></div>
-        <p class="text-muted small text-center mt-2 d-none" id="list-empty"><%= t('list.empty') %></p>
-      </div>
-
-      <div class="sidebar-footer">
-        <div class="divider"></div>
-        <div class="d-flex align-items-center justify-content-between">
-          <button type="button" class="btn btn-sm btn-mute text-muted d-flex align-items-center gap-1 p-0"
-                  data-bs-toggle="modal" data-bs-target="#aboutModal">
-            <i class="bi bi-info-circle"></i>
-            <span class="small d-none d-sm-inline"><%= t('about.link') %></span>
-          </button>
-
-          <button type="button" class="btn btn-sm btn-mute text-muted d-flex align-items-center gap-1 p-0"
-                  data-bs-toggle="modal" data-bs-target="#suggestionModal">
-            <i class="bi bi-chat-left-heart"></i>
-            <span class="small d-none d-sm-inline"><%= t('markers.suggestions') %></span>
-          </button>
-
-          <% other_locale = I18n.locale == :pt ? :en : :pt %>
-          <%= button_to locale_path(locale: other_locale),
-                method: :patch,
-                class: "btn btn-sm btn-light btn-mute opacity-50 rounded-pill px-2" do %>
-            <span class="<%= 'fw-bold' if I18n.locale == :pt %>">PT</span>
-            <span class="text-muted">|</span>
-            <span class="<%= 'fw-bold' if I18n.locale == :en %>">EN</span>
-          <% end %>
-        </div>
+      <div class="p-3 pt-2 overflow-auto flex-grow-1">
+        <%= turbo_frame_tag "new-marker-form" do %>
+          <%= render "marker_submissions/new_marker_form" %>
+        <% end %>
       </div>
     </div>
   </aside>
@@ -126,7 +153,6 @@
   </div>
 </div>
 
-<%= render "marker_submissions/new_marker_modal" %>
 <%= render "suggestions/modal" %>
 
 <div class="modal fade" id="aboutModal" tabindex="-1">

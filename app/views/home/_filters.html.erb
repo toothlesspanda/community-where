@@ -5,7 +5,7 @@
 
     <div class="mb-3">
       <div class="d-flex align-items-center gap-2 mb-2">
-        <div class="map-dot" style="background: <%= parent.hex_color %>; margin-right: 0;"></div>
+        <i class="map-marker-icon <%= parent.icon || 'fa-solid fa-location-dot' %>" style="--marker-color:<%= parent.hex_color %>;"></i>
         <span class="fw-semibold"><%= parent.human_name %></span>
       </div>
 

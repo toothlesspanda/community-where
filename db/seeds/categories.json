@@ -1,0 +1,65 @@
+[
+  {
+    "code": "deposit",
+    "translations": { "pt": "Depósito", "en": "Deposit" },
+    "icon": "fa-solid fa-recycle",
+    "color": "#4CAF50",
+    "children": [
+      { "code": "paper",       "translations": { "pt": "Papel", "en": "Paper" },                       "icon": "fa-solid fa-newspaper" },
+      { "code": "organic",     "translations": { "pt": "Orgânico", "en": "Organic" },                   "icon": "fa-solid fa-leaf" },
+      { "code": "glass",       "translations": { "pt": "Vidro", "en": "Glass" },                       "icon": "fa-solid fa-wine-bottle" },
+      { "code": "plastic",     "translations": { "pt": "Plástico", "en": "Plastic" },                   "icon": "fa-solid fa-bottle-water" },
+      { "code": "electronics", "translations": { "pt": "Eletrónica", "en": "Electronics" },             "icon": "fa-solid fa-microchip" },
+      { "code": "lamps",       "translations": { "pt": "Lâmpadas", "en": "Lamps" },                     "icon": "fa-solid fa-lightbulb" },
+      { "code": "oils",        "translations": { "pt": "Óleos", "en": "Oils" },                         "icon": "fa-solid fa-oil-can" },
+      { "code": "clothes",     "translations": { "pt": "Roupa", "en": "Clothes" },                     "icon": "fa-solid fa-shirt" }
+    ]
+  },
+  {
+    "code": "transportation",
+    "translations": { "pt": "Transportes", "en": "Transportation" },
+    "icon": "fa-solid fa-road",
+    "color": "#2196F3",
+    "children": [
+      { "code": "electric_charge", "translations": { "pt": "Carregamento elétrico", "en": "Electric charging" }, "icon": "fa-solid fa-charging-station" },
+      { "code": "electric_bikes",  "translations": { "pt": "Bicicletas elétricas", "en": "Electric bikes" },     "icon": "fa-solid fa-bicycle" },
+      { "code": "bikes_park",      "translations": { "pt": "Parque de bicicletas", "en": "Bikes park" },         "icon": "fa-solid fa-square-parking" }
+    ]
+  },
+  {
+    "code": "sports",
+    "translations": { "pt": "Desporto", "en": "Sports" },
+    "icon": "fa-solid fa-medal",
+    "color": "#FF9800",
+    "children": [
+      { "code": "futsal_field",    "translations": { "pt": "Campo de futsal", "en": "Futsal field" },     "icon": "fa-solid fa-futbol" },
+      { "code": "volleyball_field","translations": { "pt": "Campo de voleibol", "en": "Volleyball field" },"icon": "fa-solid fa-volleyball" },
+      { "code": "skate_park",      "translations": { "pt": "Skate park", "en": "Skate park" },             "icon": "fa-solid fa-person-skating" }
+    ]
+  },
+  {
+    "code": "donations",
+    "translations": { "pt": "Doações", "en": "Donations" },
+    "icon": "fa-solid fa-hand-holding-heart",
+    "color": "#E91E63",
+    "children": [
+      { "code": "kids", "translations": { "pt": "Crianças", "en": "Kids" },             "icon": "fa-solid fa-child" },
+      { "code": "moms", "translations": { "pt": "Mães", "en": "Moms" },                 "icon": "fa-solid fa-person-breastfeeding" },
+      { "code": "food", "translations": { "pt": "Alimentação", "en": "Food" },           "icon": "fa-solid fa-utensils" },
+      { "code": "toys", "translations": { "pt": "Brinquedos", "en": "Toys" },             "icon": "fa-solid fa-puzzle-piece" }
+    ]
+  },
+  {
+    "code": "animals",
+    "translations": { "pt": "Animais", "en": "Animals" },
+    "icon": "fa-solid fa-paw",
+    "color": "#795548",
+    "children": [
+      { "code": "canil",    "translations": { "pt": "Canil", "en": "Dog shelter" },               "icon": "fa-solid fa-dog" },
+      { "code": "gatil",    "translations": { "pt": "Gatil", "en": "Cat shelter" },               "icon": "fa-solid fa-cat" },
+      { "code": "shelter",  "translations": { "pt": "Abrigo", "en": "Shelter" },                   "icon": "fa-solid fa-paw" },
+      { "code": "hospital", "translations": { "pt": "Hospital veterinário", "en": "Veterinary hospital" }, "icon": "fa-solid fa-stethoscope" },
+      { "code": "parks",    "translations": { "pt": "Parques", "en": "Parks" },                   "icon": "fa-solid fa-tree" }
+    ]
+  }
+]

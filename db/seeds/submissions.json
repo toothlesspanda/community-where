@@ -1,0 +1,37 @@
+[
+  {
+    "name": "ecoponto vidro av liberdade",
+    "description": "ecoponto de vidro na avenida da liberdade, junto ao quiosque",
+    "latitude": 38.7180, "longitude": -9.1420,
+    "address": "Av. da Liberdade, Lisboa",
+    "category": "glass"
+  },
+  {
+    "name": "Ponto de recolha de óleo usado",
+    "description": "Contentor para depositar oleo alimentar usado, no mercado de campo de ourique",
+    "latitude": 38.7170, "longitude": -9.1600,
+    "address": "Mercado de Campo de Ourique, Lisboa",
+    "category": "oils"
+  },
+  {
+    "name": "Point 1",
+    "description": "banco alimentar proximo da praça do comercio",
+    "latitude": 38.7170, "longitude": -9.1392,
+    "address": "Praça do Comércio, Lisboa",
+    "category": "food"
+  },
+  {
+    "name": "carregador eletrico rossio",
+    "description": "posto de carregamento para veiculos eletricos junto à praça do rossio",
+    "latitude": 38.7139, "longitude": -9.1395,
+    "address": "Praça do Rossio, Lisboa",
+    "category": "electric_charge"
+  },
+  {
+    "name": "Contentor plastico e electronica",
+    "description": "ponto de recolha de plastico e pequenos electrodomesticos junto ao centro comercial",
+    "latitude": 38.7300, "longitude": -9.1500,
+    "address": "Centro Comercial, Lisboa",
+    "category": "plastic"
+  }
+]

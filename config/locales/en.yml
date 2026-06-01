@@ -17,9 +17,13 @@ en:
     new_point: "New Point"
     suggestions: "Suggestions"
     stop_adding: "Click on the map to add a point"
+    form_hint: "Click on the map or use your location to set the coordinates."
     current_location: "Your current location:"
+    refresh_location: "Refresh location"
 
   marker_submissions:
+    success: "Submission sent successfully! It will be validated before being published."
+    recaptcha_failed: "Verification failed. Please try again."
     form:
       address: "Address"
       latitude: "Latitude"
@@ -32,11 +36,6 @@ en:
       description_placeholder_en: "Description in English"
       optional: "(optional)"
       category: "Category"
-      select_category: "Select category"
-      other_category: "Other…"
-      subcategory: "Subcategory"
-      select_subcategory: "Select subcategory"
-      new_category: "New category"
       submit: "Submit for validation"
 
   welcome:

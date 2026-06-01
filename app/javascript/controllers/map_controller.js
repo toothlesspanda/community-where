@@ -24,15 +24,6 @@ export default class extends Controller {
 
     this.location_coordinates = await this.setupLocation()
 
-    if (this.locationName) {
-      const label = document.getElementById("location-label")
-      const name = document.getElementById("location-name")
-      if (label && name) {
-        name.textContent = this.locationName
-        label.classList.remove("d-none")
-      }
-    }
-
     this.setupMap(this.location_coordinates);
 
     await this.loadMarkers()
@@ -41,8 +32,10 @@ export default class extends Controller {
     this.map.on("click", this.handleMapClick.bind(this))
 
     window.addEventListener("city:selected", this.handleCitySelected)
-    this.modal = new bootstrap.Modal(document.getElementById("newMarkerModal"))
-    window.addEventListener("hidden.bs.modal", this.disableAddMode.bind(this))
+
+    this.map.on("popupclose", () => {
+      document.querySelectorAll("#markers-list .list-item.active").forEach(el => el.classList.remove("active"))
+    })
 
     // Listen for filter changes (form is outside controller scope, in modal)
     document.getElementById("map-filter")?.addEventListener("change", () => this.filtersChanged())
@@ -50,19 +43,48 @@ export default class extends Controller {
 
   disconnect() {
     window.removeEventListener("city:selected", this.handleCitySelected)
-    window.removeEventListener("hidden.bs.modal", this.disableAddMode.bind(this))
   }
 
 
-  async setupLocation(){
-    const location = await loadLocation()
+  async setupLocation({ force = false } = {}) {
+    const location = await loadLocation({ force })
 
     const lat = location?.lat
     const long = location?.long
 
     this.locationName = location?.name || null
+    this.updateLocationLabel()
 
     return [lat, long]
+  }
+
+  updateLocationLabel() {
+    const label = document.getElementById("location-label")
+    const name = document.getElementById("location-name")
+    if (label && name) {
+      if (this.locationName) {
+        name.textContent = this.locationName
+        label.classList.remove("d-none")
+      } else {
+        label.classList.add("d-none")
+      }
+    }
+  }
+
+  async refreshLocation() {
+    const btn = document.getElementById("refresh-location")
+    if (btn) {
+      btn.disabled = true
+      btn.querySelector("i").classList.add("fa-spin")
+    }
+
+    this.location_coordinates = await this.setupLocation({ force: true })
+    this.map.setView(this.location_coordinates, this.map.getZoom())
+
+    if (btn) {
+      btn.disabled = false
+      btn.querySelector("i").classList.remove("fa-spin")
+    }
   }
 
   setupMap(coordinates){
@@ -161,25 +183,47 @@ export default class extends Controller {
     document.cookie = "welcome_dismissed=1;max-age=31536000;path=/"
   }
 
-  enableAddMode() {
+  showMarkerForm() {
     this.addMode = true
-    document.getElementById("map").classList.add("add-mode")
     this.map.getContainer().style.cursor = "crosshair"
     document.getElementById("new-marker-message").classList.remove("d-none")
 
+    document.getElementById("sidebar-main").classList.add("d-none")
+    document.getElementById("sidebar-form").classList.remove("d-none")
+
+    // Open sidebar if closed
     const sidebar = document.getElementById("sidebar")
-    if (!sidebar.classList.contains("closed")) {
-      sidebar.classList.add("closed")
-      document.getElementById("sidebar-backdrop")?.classList.add("d-none")
+    if (sidebar.classList.contains("closed")) {
+      sidebar.classList.remove("closed")
+      if (window.innerWidth < 576) {
+        document.getElementById("sidebar-backdrop")?.classList.remove("d-none")
+      }
       setTimeout(() => this.map.invalidateSize(), 50)
     }
   }
 
-  disableAddMode() {
+  hideMarkerForm() {
     this.addMode = false
-    document.getElementById("map").classList.remove("add-mode")
     this.map.getContainer().style.cursor = ""
     document.getElementById("new-marker-message").classList.add("d-none")
+
+    document.getElementById("sidebar-form").classList.add("d-none")
+    document.getElementById("sidebar-main").classList.remove("d-none")
+
+    // Clear form fields
+    document.getElementById("latField").value = ""
+    document.getElementById("lngField").value = ""
+    document.getElementById("addressField").value = ""
+
+    this.removeSelectionMarker()
+  }
+
+  enableAddMode() {
+    this.showMarkerForm()
+  }
+
+  disableAddMode() {
+    this.hideMarkerForm()
   }
 
   filtersChanged() {
@@ -258,6 +302,11 @@ export default class extends Controller {
     this.leafletMarkers = []
     this.addMarkers(data)
     this.renderList()
+
+    // Open pending popup after markers are rebuilt
+    if (this.pendingPopupId) {
+      this.openPopupById(this.pendingPopupId)
+    }
   }
 
   addMarkers(data){
@@ -281,10 +330,9 @@ export default class extends Controller {
 
     const googleLink = `https://www.google.com/maps/search/?api=1&query=${marker.latitude},${marker.longitude}`;
 
-    const cat = marker.categories[0]
     const leafletMarker = L.marker(
         [marker.latitude, marker.longitude],
-        { icon: this.coloredIcon(cat.color, cat.icon) }
+        { icon: this.multiIcon(marker.categories) }
           )
         .addTo(this.markersLayer)
     this.leafletMarkers.push({ data: marker, leaflet: leafletMarker })
@@ -313,6 +361,11 @@ export default class extends Controller {
         }).on("popupopen", (e) => {
           const popupEl = e.popup.getElement()
           popupEl.style.setProperty("--popup-color", marker.categories[0].color)
+
+          // Highlight corresponding list item
+          document.querySelectorAll("#markers-list .list-item.active").forEach(el => el.classList.remove("active"))
+          const listItem = document.querySelector(`#markers-list .list-item[data-marker-id="${marker.id}"]`)
+          if (listItem) listItem.classList.add("active")
         }
       )
   }
@@ -355,35 +408,26 @@ export default class extends Controller {
 
     batch.forEach(marker => {
       const dist = this.distanceKm(refLat, refLng, marker.latitude, marker.longitude)
-      const distText = dist < 1 ? `${Math.round(dist * 1000)} m` : `${dist.toFixed(1)} km`
-      const color = marker.categories[0]?.color || "#6c757d"
-      const icon = marker.categories[0]?.icon || "fa-solid fa-location-dot"
-      const category = marker.categories[0]?.code || ""
+      const distText = this.distanceLabel(dist)
+      const icons = marker.categories.map(c =>
+        `<i class="map-marker-icon ${c.icon || 'fa-solid fa-location-dot'}" style="--marker-color:${c.color || '#6c757d'};font-size:1rem;"></i>`
+      ).join("")
+      const categoryNames = marker.categories.map(c => c.code).join(", ")
 
       const item = document.createElement("button")
       item.type = "button"
-      item.className = "btn btn-mute text-start p-2 d-flex align-items-start gap-2 border-bottom"
+      item.className = "list-item btn btn-mute text-start p-2 d-flex align-items-start gap-2"
+      item.dataset.markerId = marker.id
       item.innerHTML = `
-        <i class="${icon} mt-1" style="color:${color};font-size:1rem;min-width:16px;text-align:center;"></i>
+        <div class="d-flex gap-1 mt-1" style="min-width:16px;">${icons}</div>
         <div class="flex-grow-1 overflow-hidden">
           <div class="fw-semibold text-truncate">${marker.name}</div>
-          <div class="text-muted small text-truncate">${category}</div>
+          <div class="text-muted small text-truncate">${categoryNames}</div>
         </div>
-        <span class="text-muted small text-nowrap">~${distText}</span>
+        <span class="text-muted small text-nowrap">${distText}</span>
       `
       item.addEventListener("click", () => {
-        this.map.setView([marker.latitude, marker.longitude], 16)
-        const found = this.leafletMarkers.find(m => m.data.id === marker.id)
-        if (found) {
-          this.map.once("moveend", () => found.leaflet.openPopup())
-        }
-        if (window.innerWidth < 576) {
-          const sidebar = document.getElementById("sidebar")
-          if (sidebar && !sidebar.classList.contains("closed")) {
-            sidebar.classList.add("closed")
-            document.getElementById("sidebar-backdrop")?.classList.add("d-none")
-          }
-        }
+        this.selectListItem(marker, item)
       })
       container.appendChild(item)
     })
@@ -398,6 +442,52 @@ export default class extends Controller {
       btn.addEventListener("click", () => this.appendListItems())
       container.appendChild(btn)
     }
+  }
+
+  selectListItem(marker, item) {
+    // Deselect previous
+    document.querySelectorAll("#markers-list .list-item.active").forEach(el => {
+      el.classList.remove("active")
+    })
+
+    // Select current
+    item.classList.add("active")
+    this.pendingPopupId = marker.id
+
+    // Zoom — loadMarkers will fire via moveend and then open the popup
+    this.map.setView([marker.latitude, marker.longitude], 16)
+
+    // If map didn't move (already at position), open popup directly
+    setTimeout(() => {
+      if (this.pendingPopupId === marker.id) {
+        this.openPopupById(marker.id)
+      }
+    }, 300)
+
+    // Mobile: close sidebar
+    if (window.innerWidth < 576) {
+      const sidebar = document.getElementById("sidebar")
+      if (sidebar && !sidebar.classList.contains("closed")) {
+        sidebar.classList.add("closed")
+        document.getElementById("sidebar-backdrop")?.classList.add("d-none")
+      }
+    }
+  }
+
+  openPopupById(id) {
+    const found = this.leafletMarkers.find(m => m.data.id === id)
+    if (found) {
+      found.leaflet.openPopup()
+      this.pendingPopupId = null
+    }
+  }
+
+  distanceLabel(dist) {
+    if (dist < 1) return "< 1 km"
+    if (dist < 5) return "< 5 km"
+    if (dist < 10) return "< 10 km"
+    if (dist < 20) return "< 20 km"
+    return "+20 km"
   }
 
   distanceKm(lat1, lon1, lat2, lon2) {
@@ -423,12 +513,16 @@ export default class extends Controller {
     });
   }
 
-  coloredIcon(color, icon) {
+  multiIcon(categories) {
+    const icons = categories.map(c =>
+      `<i class="map-marker-icon ${c.icon || 'fa-solid fa-location-dot'}" style="--marker-color:${c.color || '#6c757d'};"></i>`
+    ).join("")
+    const width = Math.max(20, categories.length * 18)
     return L.divIcon({
       className: "",
-      html: `<i class="map-marker-icon ${icon || 'fa-solid fa-location-dot'}" style="color:${color};"></i>`,
-      iconSize: [20, 20],
-      iconAnchor: [10, 10]
+      html: `<div class="d-flex gap-1">${icons}</div>`,
+      iconSize: [width, 20],
+      iconAnchor: [width / 2, 10]
     })
   }
 
@@ -448,25 +542,67 @@ export default class extends Controller {
   }
 
   handleMapClick(e) {
-    if(this.addMode == false) return;
+    if (!this.addMode) return
     const { lat, lng } = e.latlng
+    this.setCoordinates(lat, lng)
+  }
 
-    document.getElementById("latField").value = lat
-    document.getElementById("lngField").value = lng
-    
-    document.getElementById("latHidden").value = lat
-    document.getElementById("lngHidden").value = lng
-
-    this.modal.show()
+  setCoordinates(lat, lng) {
+    document.getElementById("latField").value = parseFloat(lat).toFixed(6)
+    document.getElementById("lngField").value = parseFloat(lng).toFixed(6)
     this.reverseGeocode(lat, lng)
+    this.placeSelectionMarker(lat, lng)
+  }
 
-    this.addMode = false
-    this.map.getContainer().style.cursor = ""
+  placeSelectionMarker(lat, lng) {
+    if (this.selectionMarker) {
+      this.selectionMarker.setLatLng([lat, lng])
+    } else {
+      const icon = L.divIcon({
+        className: "",
+        html: '<i class="fa-solid fa-location-dot" style="color:#dc3545;font-size:1.75rem;-webkit-text-stroke:2px white;paint-order:stroke fill;filter:drop-shadow(0 1px 3px rgba(0,0,0,0.4));"></i>',
+        iconSize: [28, 34],
+        iconAnchor: [14, 34]
+      })
+      this.selectionMarker = L.marker([lat, lng], { icon }).addTo(this.map)
+    }
+  }
+
+  removeSelectionMarker() {
+    if (this.selectionMarker) {
+      this.map.removeLayer(this.selectionMarker)
+      this.selectionMarker = null
+    }
+  }
+
+  coordsChanged() {
+    const lat = parseFloat(document.getElementById("latField").value)
+    const lng = parseFloat(document.getElementById("lngField").value)
+    if (!isNaN(lat) && !isNaN(lng)) {
+      this.reverseGeocode(lat, lng)
+    }
+  }
+
+  useMyLocation() {
+    const btn = document.querySelector("[data-action='click->map#useMyLocation']")
+    if (btn) btn.disabled = true
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const lat = position.coords.latitude
+        const lng = position.coords.longitude
+        this.setCoordinates(lat, lng)
+        this.map.setView([lat, lng], 16)
+        if (btn) btn.disabled = false
+      },
+      () => {
+        if (btn) btn.disabled = false
+      }
+    )
   }
 
   async reverseGeocode(lat, lng) {
     const addressField = document.getElementById("addressField")
-    const addressHidden = document.getElementById("addressHidden")
     if (!addressField) return
 
     addressField.value = "..."
@@ -477,12 +613,9 @@ export default class extends Controller {
         { headers: { "User-Agent": "CommunityWhere/1.0" } }
       )
       const data = await response.json()
-      const address = data.display_name || ""
-      addressField.value = address
-      addressHidden.value = address
+      addressField.value = data.display_name || ""
     } catch {
       addressField.value = ""
-      addressHidden.value = ""
     }
   }
 }
