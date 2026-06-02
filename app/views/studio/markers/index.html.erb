@@ -5,17 +5,27 @@
     <thead>
       <tr>
         <th>#</th>
+        <th>Photo</th>
         <th>Name</th>
         <th>Categories</th>
         <th>Address</th>
         <th>Location</th>
         <th>Date</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
       <% @markers.each do |m| %>
         <tr>
           <td class="text-muted"><%= m.id %></td>
+          <td>
+            <% if m.photo.attached? %>
+              <%= image_tag m.photo.variant(resize_to_limit: [80, 60]),
+                    style: "width:40px;height:30px;object-fit:cover;border-radius:4px;" %>
+            <% else %>
+              <span class="text-muted small">—</span>
+            <% end %>
+          </td>
           <td class="fw-semibold"><%= m.name %></td>
           <td>
             <% m.categories.each do |c| %>
@@ -25,6 +35,11 @@
           <td class="text-muted small"><%= m.address || "—" %></td>
           <td class="text-muted small"><%= m.latitude&.round(4) %>, <%= m.longitude&.round(4) %></td>
           <td class="text-muted small"><%= m.created_at.strftime("%d/%m/%Y") %></td>
+          <td>
+            <%= link_to edit_studio_marker_path(m), class: "btn btn-sm btn-outline-secondary" do %>
+              <i class="bi bi-pencil"></i>
+            <% end %>
+          </td>
         </tr>
       <% end %>
     </tbody>

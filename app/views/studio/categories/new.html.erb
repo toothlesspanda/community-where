@@ -1,0 +1,10 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h3 class="fw-semibold mb-0">New Category</h3>
+  <%= link_to "Back", studio_categories_path, class: "btn btn-sm btn-outline-secondary" %>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <%= render "form", category: @category, parents: @parents %>
+  </div>
+</div>

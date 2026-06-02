@@ -29,5 +29,6 @@ module CommunityWhere
     config.i18n.fallbacks = true
 
     config.middleware.use Rack::Attack
+    config.active_storage.variant_processor = :mini_magick
   end
 end

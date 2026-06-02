@@ -42,6 +42,7 @@ class MarkerSubmissionsController < ApplicationController
       :name_en,
       :description_en,
       :address,
+      :photo,
       category_ids: []
     )
   end

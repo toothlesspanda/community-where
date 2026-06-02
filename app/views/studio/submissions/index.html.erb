@@ -5,6 +5,7 @@
     <thead>
       <tr>
         <th>#</th>
+        <th>Photo</th>
         <th>Name</th>
         <th>Category</th>
         <th>Location</th>
@@ -16,6 +17,14 @@
       <% @submissions.each do |s| %>
         <tr class="cursor-pointer" onclick="window.location='<%= studio_submission_path(s) %>'">
           <td class="text-muted"><%= s.id %></td>
+          <td>
+            <% if s.photo.attached? %>
+              <%= image_tag s.photo.variant(resize_to_limit: [80, 60]),
+                    style: "width:40px;height:30px;object-fit:cover;border-radius:4px;" %>
+            <% else %>
+              <span class="text-muted small">—</span>
+            <% end %>
+          </td>
           <td class="fw-semibold"><%= s.name %></td>
           <td>
             <% cats = Category.where(id: Array(s.category_ids)) %>

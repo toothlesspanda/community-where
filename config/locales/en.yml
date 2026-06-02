@@ -35,6 +35,7 @@ en:
       name_placeholder_en: "Name in English"
       description_placeholder_en: "Description in English"
       optional: "(optional)"
+      photo: "Photo"
       category: "Category"
       submit: "Submit for validation"
 

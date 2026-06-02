@@ -73,7 +73,8 @@ Rails.application.configure do
 
   config.hosts << /.*\.lvh\.me/
   config.hosts << "lvh.me"
-  config.hosts << "b301-2001-8a0-7ef7-2000-c0e1-ec56-dd66-d86c.ngrok-free.app"
+  config.hosts << "4fb1-2001-8a0-7ef7-2000-40f1-5bae-7998-571b.ngrok-free.app"
+  config.hosts << "studio.4fb1-2001-8a0-7ef7-2000-40f1-5bae-7998-571b.ngrok-free.app"
 
   config.active_job.queue_adapter = :solid_queue
 end
