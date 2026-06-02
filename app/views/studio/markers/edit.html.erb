@@ -1,0 +1,50 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h3 class="fw-semibold mb-0">Edit Marker — <span class="text-muted"><%= @marker.name %></span></h3>
+  <%= link_to "Back", studio_markers_path, class: "btn btn-sm btn-outline-secondary" %>
+</div>
+
+<div class="row g-4">
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <dl class="mb-0">
+          <dt>Name</dt>
+          <dd><%= @marker.name %></dd>
+          <dt>Address</dt>
+          <dd><%= @marker.address || "—" %></dd>
+          <dt>Location</dt>
+          <dd><%= @marker.latitude&.round(5) %>, <%= @marker.longitude&.round(5) %></dd>
+          <dt>Categories</dt>
+          <dd>
+            <% @marker.categories.each do |c| %>
+              <span class="badge bg-secondary bg-opacity-10 text-dark"><%= c.code %></span>
+            <% end %>
+          </dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header bg-white"><strong>Photo</strong></div>
+      <div class="card-body">
+        <% if @marker.photo.attached? %>
+          <div class="mb-3">
+            <%= image_tag @marker.photo.variant(resize_to_limit: [800, 600]),
+                  class: "img-fluid rounded" %>
+          </div>
+        <% end %>
+
+        <%= form_with model: [:studio, @marker], method: :patch do |f| %>
+          <div class="mb-3">
+            <%= f.label :photo, "Upload photo", class: "form-label fw-semibold" %>
+            <%= f.file_field :photo, class: "form-control", accept: "image/*" %>
+            <div class="form-text">Max recommended: 2MB. Will be resized to 800x600 WebP.</div>
+          </div>
+          <%= f.submit "Save Photo", class: "btn btn-primary btn-sm" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

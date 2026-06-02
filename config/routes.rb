@@ -10,7 +10,8 @@ Rails.application.routes.draw do
       post "login", to: "sessions#create"
       delete "logout", to: "sessions#destroy"
 
-      resources :markers, only: %i[index]
+      resources :markers, only: %i[index edit update]
+      resources :categories, except: %i[show]
       resources :submissions, only: %i[index show]
       resources :suggestions, only: %i[index]
       resources :proposals, only: %i[index show update] do
@@ -30,7 +31,9 @@ Rails.application.routes.draw do
 
   root "home#index"
 
-  resources :markers
+  resources :markers do
+    get "search", on: :collection
+  end
   resources :places do
     get "autocomplete", on: :collection
   end

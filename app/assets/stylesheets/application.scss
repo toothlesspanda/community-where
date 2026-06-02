@@ -209,6 +209,14 @@
   box-shadow: inset 0px 0px 0px 3px #085c9130;
 }
 
+.search-result {
+  cursor: pointer;
+  border-radius: 4px;
+  &:hover {
+    background: var(--bs-primary-bg-subtle);
+  }
+}
+
 .input-group-text {
   border-right: none !important;
 }

@@ -42,6 +42,14 @@
             <dd><%= @submission.description_en %></dd>
           <% end %>
 
+          <% if @submission.photo.attached? %>
+            <dt>Photo</dt>
+            <dd>
+              <%= image_tag @submission.photo.variant(resize_to_limit: [800, 600]),
+                    class: "img-fluid rounded" %>
+            </dd>
+          <% end %>
+
           <dt>Submitted</dt>
           <dd><%= @submission.created_at.strftime("%d/%m/%Y %H:%M") %></dd>
         </dl>

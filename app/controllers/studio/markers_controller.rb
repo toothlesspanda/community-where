@@ -9,5 +9,25 @@ module Studio
       @markers = @markers.offset((@page - 1) * PER_PAGE).limit(PER_PAGE)
       @total_pages = (@total.to_f / PER_PAGE).ceil
     end
+
+    def edit
+      @marker = Marker.find(params[:id])
+    end
+
+    def update
+      @marker = Marker.find(params[:id])
+
+      if @marker.update(marker_params)
+        redirect_to studio_markers_path, notice: "Marker updated."
+      else
+        render :edit, status: :unprocessable_entity
+      end
+    end
+
+    private
+
+    def marker_params
+      params.require(:marker).permit(:photo)
+    end
   end
 end

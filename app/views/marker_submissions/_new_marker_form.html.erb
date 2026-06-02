@@ -86,6 +86,11 @@
     <% end %>
   </div>
 
+  <div class="form-group mb-3">
+    <%= f.label :photo, t('marker_submissions.form.photo'), class: "text-muted" %>
+    <%= f.file_field :photo, class: "form-control form-control-sm", accept: "image/*" %>
+  </div>
+
   <%= recaptcha_tags %>
 
   <%= f.submit t('marker_submissions.form.submit'), class: "btn btn-primary w-100" %>

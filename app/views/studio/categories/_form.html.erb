@@ -1,0 +1,68 @@
+<%= form_with model: [:studio, category], class: "card" do |f| %>
+  <div class="card-body">
+    <% if category.errors.any? %>
+      <div class="alert alert-danger">
+        <% category.errors.full_messages.each do |msg| %>
+          <div><%= msg %></div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <div class="mb-3">
+      <%= f.label :code, "Code", class: "form-label fw-semibold" %>
+      <%= f.text_field :code, class: "form-control", required: true %>
+      <div class="form-text">Internal identifier (e.g. "glass", "plastic")</div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col">
+        <label class="form-label fw-semibold">Name PT</label>
+        <input type="text" name="category[code_translations][pt]" class="form-control"
+               value="<%= category.code_translations&.dig("pt") %>" placeholder="Vidro">
+      </div>
+      <div class="col">
+        <label class="form-label fw-semibold">Name EN</label>
+        <input type="text" name="category[code_translations][en]" class="form-control"
+               value="<%= category.code_translations&.dig("en") %>" placeholder="Glass">
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :parent_id, "Parent", class: "form-label fw-semibold" %>
+      <%= f.select :parent_id,
+            options_for_select(
+              parents.map { |p| [p.code, p.id] },
+              category.parent_id
+            ),
+            { include_blank: "None (top-level)" },
+            class: "form-select" %>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col">
+        <%= f.label :hex_color, "Color", class: "form-label fw-semibold" %>
+        <div class="d-flex gap-2 align-items-center">
+          <%= f.color_field :hex_color, class: "form-control form-control-color", value: category.hex_color || "#6c757d" %>
+          <%= f.text_field :hex_color, class: "form-control", placeholder: "#4CAF50" %>
+        </div>
+        <div class="form-text">Only needed for top-level categories</div>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :icon, "Icon class", class: "form-label fw-semibold" %>
+      <div class="d-flex gap-2 align-items-center">
+        <%= f.text_field :icon, class: "form-control", placeholder: "fa-solid fa-recycle" %>
+        <% if category.icon.present? %>
+          <i class="<%= category.icon %> fs-4" style="color: <%= category.hex_color || category.parent&.hex_color || '#6c757d' %>;"></i>
+        <% end %>
+      </div>
+      <div class="form-text">Font Awesome class (e.g. "fa-solid fa-recycle")</div>
+    </div>
+
+    <div class="d-flex gap-2">
+      <%= f.submit category.persisted? ? "Update" : "Create", class: "btn btn-primary" %>
+      <%= link_to "Cancel", studio_categories_path, class: "btn btn-outline-secondary" %>
+    </div>
+  </div>
+<% end %>

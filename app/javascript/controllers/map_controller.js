@@ -32,6 +32,7 @@ export default class extends Controller {
     this.map.on("click", this.handleMapClick.bind(this))
 
     window.addEventListener("city:selected", this.handleCitySelected)
+    window.addEventListener("marker:selected", this.handleMarkerSelected)
 
     this.map.on("popupclose", () => {
       document.querySelectorAll("#markers-list .list-item.active").forEach(el => el.classList.remove("active"))
@@ -43,6 +44,7 @@ export default class extends Controller {
 
   disconnect() {
     window.removeEventListener("city:selected", this.handleCitySelected)
+    window.removeEventListener("marker:selected", this.handleMarkerSelected)
   }
 
 
@@ -323,7 +325,7 @@ export default class extends Controller {
       categories+= `<div> <span class="me-2">${parentKey}:</span>`
 
       for(let category of cats){
-        categories+= `<span class="badge border border-2 border-primary text-primary">${category.code}</span>`
+        categories+= `<span class="badge border border-2" style="border-color:${category.color} !important;color:${category.color};background:color-mix(in srgb, ${category.color} 15%, white);">${category.code}</span>`
       }
       categories+= `</div>`
     }
@@ -340,7 +342,9 @@ export default class extends Controller {
     leafletMarker
         .bindPopup(`
           <div class="popup-content">
-             <span class="fs-5">${marker.name}</span><br>
+              ${marker.photo ? `<img src="${marker.photo}" class="popup-photo mb-2" alt="">` : ''}
+             <span class="fs-5">${marker.name}</span>
+              ${marker.address ? `<div class="text-muted small">${marker.address}</div>` : ''}
               <p class="my-1 text-muted d-none">${marker.description}</p>
               <div class="divider my-1"></div>
               <div class="my-2">
@@ -409,9 +413,13 @@ export default class extends Controller {
     batch.forEach(marker => {
       const dist = this.distanceKm(refLat, refLng, marker.latitude, marker.longitude)
       const distText = this.distanceLabel(dist)
-      const icons = marker.categories.map(c =>
+      const maxIcons = 2
+      const visible = marker.categories.slice(0, maxIcons)
+      const extra = marker.categories.length - maxIcons
+      let icons = visible.map(c =>
         `<i class="map-marker-icon ${c.icon || 'fa-solid fa-location-dot'}" style="--marker-color:${c.color || '#6c757d'};font-size:1rem;"></i>`
       ).join("")
+      if (extra > 0) icons += `<span class="text-muted small">+${extra}</span>`
       const categoryNames = marker.categories.map(c => c.code).join(", ")
 
       const item = document.createElement("button")
@@ -419,8 +427,8 @@ export default class extends Controller {
       item.className = "list-item btn btn-mute text-start p-2 d-flex align-items-start gap-2"
       item.dataset.markerId = marker.id
       item.innerHTML = `
-        <div class="d-flex gap-1 mt-1" style="min-width:16px;">${icons}</div>
-        <div class="flex-grow-1 overflow-hidden">
+        <div class="d-flex align-items-center gap-1 mt-1 flex-shrink-0">${icons}</div>
+        <div class="flex-grow-1 min-width-0 overflow-hidden">
           <div class="fw-semibold text-truncate">${marker.name}</div>
           <div class="text-muted small text-truncate">${categoryNames}</div>
         </div>
@@ -539,6 +547,12 @@ export default class extends Controller {
     }
 
     this.map.setView([lat, lng], zoom)
+  }
+
+  handleMarkerSelected = (event) => {
+    const { id, latitude, longitude } = event.detail
+    this.pendingPopupId = id
+    this.map.setView([latitude, longitude], 17)
   }
 
   handleMapClick(e) {

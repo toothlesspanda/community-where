@@ -1,0 +1,83 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h3 class="fw-semibold mb-0">Categories <span class="text-muted fw-normal">(<%= Category.count %>)</span></h3>
+  <%= link_to "New Category", new_studio_category_path, class: "btn btn-sm btn-primary" %>
+</div>
+
+<% @parents.each do |parent| %>
+  <div class="card mb-3">
+    <div class="card-header bg-white d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center gap-2">
+        <% if parent.icon.present? %>
+          <i class="<%= parent.icon %>" style="color: <%= parent.hex_color || '#6c757d' %>;"></i>
+        <% end %>
+        <% if parent.hex_color.present? %>
+          <span class="rounded-circle d-inline-block" style="width:14px;height:14px;background:<%= parent.hex_color %>;"></span>
+        <% end %>
+        <strong><%= parent.code %></strong>
+        <% if parent.code_translations.present? %>
+          <span class="text-muted small"><%= parent.code_translations.values.compact.join(" / ") %></span>
+        <% end %>
+        <span class="text-muted small">(<%= parent.children.size %>)</span>
+      </div>
+      <div class="d-flex gap-1">
+        <%= link_to new_studio_category_path(parent_id: parent.id), class: "btn btn-sm btn-outline-primary" do %>
+          <i class="bi bi-plus-lg"></i>
+        <% end %>
+        <%= link_to edit_studio_category_path(parent), class: "btn btn-sm btn-outline-secondary" do %>
+          <i class="bi bi-pencil"></i>
+        <% end %>
+      </div>
+    </div>
+
+    <% if parent.children.any? %>
+      <div class="list-group list-group-flush">
+        <% parent.children.order(:code).each do |child| %>
+          <div class="list-group-item d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-2">
+              <% if child.icon.present? %>
+                <i class="<%= child.icon %>" style="color: <%= parent.hex_color || '#6c757d' %>;"></i>
+              <% end %>
+              <span><%= child.code %></span>
+              <% if child.code_translations.present? %>
+                <span class="text-muted small"><%= child.code_translations.values.compact.join(" / ") %></span>
+              <% end %>
+            </div>
+            <div class="d-flex gap-1">
+              <%= link_to edit_studio_category_path(child), class: "btn btn-sm btn-outline-secondary" do %>
+                <i class="bi bi-pencil"></i>
+              <% end %>
+              <% if child.markers.empty? %>
+                <%= button_to studio_category_path(child), method: :delete, class: "btn btn-sm btn-outline-danger",
+                    form: { data: { turbo_confirm: "Delete '#{child.code}'?" } } do %>
+                  <i class="bi bi-trash"></i>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<% if @orphans.any? %>
+  <div class="card mb-3">
+    <div class="card-header bg-warning bg-opacity-10">
+      <strong>Orphaned categories</strong>
+      <span class="text-muted small">(parent missing)</span>
+    </div>
+    <div class="list-group list-group-flush">
+      <% @orphans.each do |cat| %>
+        <div class="list-group-item d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center gap-2">
+            <span><%= cat.code %></span>
+            <span class="text-muted small">parent_id: <%= cat.parent_id %></span>
+          </div>
+          <%= link_to edit_studio_category_path(cat), class: "btn btn-sm btn-outline-secondary" do %>
+            <i class="bi bi-pencil"></i>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>

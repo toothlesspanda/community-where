@@ -116,8 +116,8 @@
       <i class="bi bi-list fs-5"></i>
     </button>
 
-    <div id="new-marker-message" class="position-absolute top-0 start-0 w-100 d-flex justify-content-center d-none mt-3 map-overlay-element">
-      <div class="add-mode-banner d-flex align-items-center gap-2 px-3 py-2">
+    <div id="new-marker-message" class="position-absolute top-0 start-0 w-100 d-flex justify-content-center d-none mt-3 map-overlay-element" style="pointer-events:none;">
+      <div class="add-mode-banner d-flex align-items-center gap-2 px-3 py-2" style="pointer-events:auto;">
         <span class="recording-dot"></span>
         <span class="fw-semibold"><%= t('markers.stop_adding') %></span>
         <button class="btn btn-sm btn-mute p-0 ms-1" data-action="click->map#disableAddMode">

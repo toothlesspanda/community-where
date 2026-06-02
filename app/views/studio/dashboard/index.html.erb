@@ -29,6 +29,15 @@
   </div>
 
   <div class="col-md-4">
+    <a href="<%= studio_categories_path %>" class="card text-decoration-none">
+      <div class="card-body">
+        <h6 class="text-muted">Categories</h6>
+        <span class="fs-3 fw-semibold"><%= Category.count %></span>
+      </div>
+    </a>
+  </div>
+
+  <div class="col-md-4">
     <a href="<%= studio_proposals_path(status: :pending) %>" class="card text-decoration-none">
       <div class="card-body">
         <h6 class="text-muted">Pending Proposals</h6>
