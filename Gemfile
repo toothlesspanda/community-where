@@ -44,6 +44,6 @@ group :test do
   gem "selenium-webdriver"
 end
 
-gem "image_processing", "~> 1.2"
+gem "image_processing", "~> 2.0"
 gem "mobility", "~> 1.3"
 gem "mission_control-jobs"
